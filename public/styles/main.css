@@ -1,3 +1,46 @@
-* {
-  box-sizing: border-box;
+div {
+
+}
+
+body {
+  font-family: 'Rubik', sans-serif;
+}
+
+.col-xs-6 {
+height: 28vh;
+display: block;
+}
+
+img {
+ height: 49vh;
+ border-radius: 89px;
+ float: right;
+}
+
+.col-1 {
+ height : 12vh;
+ text-align: center;
+ padding: 20px;
+
+}
+
+button,
+.btn-Create {
+  background-color: green;
+}
+
+button,
+.btn-Cancel
+{
+  background-color: red;
+  float: right;
+}
+
+.row {
+  padding: 25px;
+}
+
+h3 {
+  font-size: 24px:
+  padding: 12px;
 }
