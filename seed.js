@@ -261,23 +261,4 @@ db.User.deleteMany({}, (err,users)=> {
       
     });
   });
-
 });
-      /*
-      db.User.findOneAndUpdate({'username': p.post_by})
-      .exec((err,foundUser)=> {
-        if (err) { return console.log(err); }
-        newPost.post_by= foundUser;
-        newPost.save((err,savedPost)=> {
-          if (err) { return console.log(err); }
-          console.log('saved post',savedPost.title);
-        });
-        
-            
-      });
-    });     
-  });
-}); 
-//*/
-
- 
