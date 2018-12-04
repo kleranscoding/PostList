@@ -1,5 +1,8 @@
 const db= require('../models');
 
+const INTERNAL_ERR= 500;
+const NOT_FOUND= 404;
+
 module.exports= {
 
     'index': (req, res)=> {
@@ -7,7 +10,7 @@ module.exports= {
         .populate('categories')
         .populate('post_by')
         .exec((err,posts)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(posts);
         });
     },
@@ -17,7 +20,7 @@ module.exports= {
         .populate('categories')
         .populate('post_by')
         .exec((err,posts)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(posts);
         });
     },
@@ -27,7 +30,7 @@ module.exports= {
         .populate('post_by')
         .populate('categories')
         .exec((err,posts)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(posts);
         });
     },
@@ -37,7 +40,7 @@ module.exports= {
         //.populate('post_by')
         //.populate('category')
         .exec((err,posts)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(posts);
         });
     },
@@ -46,7 +49,7 @@ module.exports= {
         db.Post.find({'categories': req.params.cat_id})
         //.populate('post_by')
         .exec((err,posts)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(posts);
         });
     },
@@ -54,7 +57,7 @@ module.exports= {
     'show_by_cat_id': (req, res)=> {
         db.Post.findOne({'_id': req.params.post_id, 'categories': {'$in': req.params.cat_id}})
         .exec((err,posts)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(posts);
         });
     },
@@ -66,10 +69,11 @@ module.exports= {
             'description': req.body.description,
             'images': req.body.images,
             'categories': req.body.categories,
-            'post_by': req.params.user_id
+            'post_by': req.params.user_id,
+            'contact_info': req.body.contact_info
         });
         newPost.save((err,savedPost)=> {
-            if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
             res.json(savedPost);
         });
     },
@@ -86,7 +90,7 @@ module.exports= {
             'post_by': req.params.user_id
         },
         {'$set': edit},{new: true},(err,editPost)=> {
-            if (err) { res.status(404).json({error:'not found', 'description': err}); }
+            if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
             res.json(editPost);
         });
     },
@@ -94,7 +98,7 @@ module.exports= {
     'delete': (req, res)=> {
         db.Post.findById(req.params.post_id)
         .exec((err,deletePost)=> {
-            if (err) { res.status(404).json({error:'not found', 'description': err}); }
+            if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
             res.json(deletePost);
         });
     },

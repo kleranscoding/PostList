@@ -233,7 +233,8 @@ db.User.deleteMany({}, (err,users)=> {
         'description': p.description,
         'images': p.images,
         'categories': [],
-        'post_by': ''
+        'post_by': '',
+        'contact_info': p.contact_info
       });
       db.User.findOne({'username': p.post_by})
       .exec((err,foundUser)=> {

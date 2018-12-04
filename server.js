@@ -30,6 +30,21 @@ app.get('/',(req, res)=> {
     res.sendFile(__dirname+'/views/index.html');
 });
 
+app.get('/category',(req, res)=> {
+    res.sendFile(__dirname+'/views/category.html');
+});
+
+app.get('/profile',(req, res)=> {
+    res.sendFile(__dirname+'/views/profile.html');
+    //res.sendFile(__dirname+'/views/profile.html?id='+req.params.userid);
+});
+
+app.get('/profile/:userid',(req, res)=> {
+    res.redirect('/profile?userid='+req.params.userid);
+});
+
+//app.get('/users/:userid');
+
 /**
  * API home
  */

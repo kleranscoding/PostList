@@ -49,7 +49,7 @@ nav li:nth-child(4) {
     background: rgb(152, 231, 255);
 }
 
-article {
+.post-snippet {
     width: 60%;
     margin: 20px 20%;
     border-radius: 10px;
@@ -58,25 +58,40 @@ article {
     transition: all 1s;
 }
 
-article:hover {
+.post-snippet:hover {
     background-color: rgba(153, 255, 246, 0.75);
     transform: scale(1.05);
 }
 
-article .wrapper {
+.post-snippet .wrapper {
     display: flex;
     justify-content: space-around;
     align-content: center;
     flex-wrap: wrap;
 }
 
-article img {
+.post-snippet img {
     max-width: 25%;
     max-height: 25%;
 }
 
-article p {
+.post-snippet p {
     display: block;
     width: 30%;
     text-align: left;
 }
+
+
+
+#modal-post .modal-dialog{
+    margin: 10px 5%;
+    width: 90%;
+    height: 100%;
+}
+
+#modal-post section{
+    width: 60%;
+    margin: 20px 20%;
+    text-align: left;
+}
+
