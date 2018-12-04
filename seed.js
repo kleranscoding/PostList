@@ -233,23 +233,19 @@ db.User.deleteMany({}, (err,users)=> {
         'description': p.description,
         'images': p.images,
         'categories': [],
-        'post_by': p.post_by
+        'post_by': ''
       });
-      db.User.findOneAndUpdate(
-        {'username': p.post_by},
-        {'$push': {'posts': newPost}},
-        (err,foundUser)=> {
+      db.User.findOne({'username': p.post_by})
+      .exec((err,foundUser)=> {
         if (err) { return console.log(err); }
+        
         newPost.post_by= foundUser;
         newPost.save((err,savedPost)=> {
           if (err) { return console.log(err); }
           console.log('saved post',savedPost.title);
-        });
-        p.categories.forEach((cat)=> {
-          db.Category.findOneAndUpdate(
-            {'name': cat},
-            {'$push': {'posts': newPost}},
-            (err1,foundCat)=> {
+          p.categories.forEach((cat)=> {
+            db.Category.findOne({'name': cat})
+            .exec((err1,foundCat)=> {
               if (err1) { return console.log(err1); }
               db.Post.updateOne(
                 {'_id': newPost._id},
@@ -259,12 +255,29 @@ db.User.deleteMany({}, (err,users)=> {
                   console.log('saved category',foundCat.name);
               });
             });
+          });
         });
       });
       
     });
   });
+
 });
+      /*
+      db.User.findOneAndUpdate({'username': p.post_by})
+      .exec((err,foundUser)=> {
+        if (err) { return console.log(err); }
+        newPost.post_by= foundUser;
+        newPost.save((err,savedPost)=> {
+          if (err) { return console.log(err); }
+          console.log('saved post',savedPost.title);
+        });
+        
+            
+      });
+    });     
+  });
+}); 
 //*/
 
  
