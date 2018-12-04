@@ -15,11 +15,11 @@ $.ajax({
     url: USERS,
     success: userSuccess,
     error: userError
-});
+    });
 }); 
 
 userSuccess((users) => {
-    users.forEach((el) => {
+    users.forEach(el => {
         var username = el.username;
         var password = el.password;
         var location = el.location;
@@ -27,19 +27,24 @@ userSuccess((users) => {
         var join_date = el.join_date;
         var img_url = el.img_url;
         var preference = el.preference;
-    })
-})
 
     profilehtml = 
         `   <div class="row">
-            <div class="col-xs-6"><div id=power></div>
+            <div class="col-xs-6"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ8xzdv564ewROcTBYDdv51oTD5SgNOCDDwMw4XXIdvxFGyQzn" alt="user"></div>
             <div class="col-xs-6">
-                <h3>${username}</h3><br>
-                <h3>${location}</h3><br>
-                <h3>${join_date}</h3><br>
-                <h3>https://www.postlist.com/Newuser</h3>
+                <h3>username:${username}</h3><br>
+                <h3>location:${location}</h3><br>
+                <h3>date joined:${join_date}</h3><br>
+                <h3>email:${email}</h3>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6"><p>${preference}<p></div>
+            <div class="col-xs-6"></div>
         </div>`
+
+    });
+});
 
     $('.btn-cancel').on('submit', (e) => {
     e.preventDefault();
@@ -56,11 +61,13 @@ userSuccess((users) => {
     $usersList.on('click', '.cancelBtn', function() {
     $.ajax({
       method: 'DELETE',
-      url: USERS+$(this).attr('data-id'),
+      url: POSTS,
       success: deleteUserSuccess,
       error: deleteUserError
     });
   });
+  deleteUserSuccess()
+  deleteUserError()
 
 
 
@@ -81,30 +88,32 @@ newPostSuccess((posts) => {
         var desc = el.description;
         var contact = el.contact_info
         var images = el.images;
-        var url = el.url;
+        var url = el.url
 
        viewhtml = 
                 `<div class="row">
                 <div class="col-xs-12 col-md-8"></div>
-                <div class="col-xs-6 col-md-4"><p id='#king'></p>
-                <p>12/1/2018</p></div>
+                <div class="col-xs-6 col-md-4"><p>${title}></p>
+                <p>${date}</p></div>
                 </div>
                 
                 <!-- Columns are always 50% wide, on mobile and desktop -->
                 <div class="row">
                 <div class="col-12">
-                <img src="https://www.joomlapartner.nl/components/com_easyblog/themes/wireframe/images/placeholder-image.png" alt="inserted">
+                ${images}
                 </div>
                     </div>
                 <div class="row">
                     <div class="col-12">
                     <div id='#aim'>
-                    <h3>description...</h3>
+                    <h3>${desc}</h3>
                 </div>
                     </div>
                     <div class="row">
-                <div class="col-xs-6 col-md-4"><p>Contact_info</p></div>
-                <div class="col-xs-12 col-md-8"> </div>`
+                <div class="col-xs-6 col-md-4"><p>${contact}</p></div>
+                <div class="col-xs-12 col-md-8"> </div>`; 
+                $('#aim').append(viewhtml);
+                
     })
 })
 
@@ -119,9 +128,11 @@ $('.').on('submit', (e) => {
     });
 });
 
-function newPostSuccess(json) {
+function createPostSuccess(json) {
     $("#newPlaceForm input").val("");
     posts.push(json);
     console.log(json);
     renderPost();
   }
+
+
