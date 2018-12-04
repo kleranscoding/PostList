@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PostList | Category</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel='stylesheet' href='styles/main.css'>
+    <link rel='stylesheet' href='styles/category.css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src='scripts/category.js' defer></script>
+  </head>
+
+  <body>
+      <header>
+          <div class='banner-pic'></div>
+          <nav class='navbar navbar-expand-lg navbar-light bg-light'>
+            <a class='navbar-brand' href='/'>#PostList</a>
+            <ul class='nav navbar-nav'>
+              <li class='active'><a href='/'>Home</a></li>
+              <li><a href='/category'>Search</a></li>
+              <li><a href=''>Login</a></li>
+              <li><a href=''>Register</a></li>
+            </ul>
+          </nav>
+        </header>
+    
+    <div class='container'>
+      <h3>Choose a Category</h3>
+      <form id='search_form'>
+        <select id='cat_options' class='form-control'>
+        </select>
+        <button type='button' class='btn btn-success'>GO!</button>
+      </form>
+    </div>
+    
+    <div id='show_posts'></div>
+
+  </body>
+</html>

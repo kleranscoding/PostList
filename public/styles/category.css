@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    text-align: center;
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+
+#search_form {
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+    flex-direction: row;
+} 
+
