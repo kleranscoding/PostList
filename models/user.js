@@ -8,7 +8,6 @@ const userSchema= new mongoose.Schema({
   'location': String,
   'join_date': String,
   'img_url': String,
-  'posts': [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'Post'}],
   'preference': [{'type': mongoose.Schema.Types.ObjectId, 'ref': 'Category'}],
 });
 

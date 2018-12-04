@@ -1,6 +1,7 @@
 /**
  * server.js
  * PostList
+ * Author: Clarence
  */
 
 /////***** ===== VARIABLES ===== *****/////
@@ -10,9 +11,6 @@ const express= require('express');
 const app= express();
 const bodyParser= require('body-parser');
 const db= require('./models');
-const async = require('async');
-const bcrypt= require('bcrypt');
-const jwt= require('jsonwebtoken');
 
 
 /////***** ===== MIDDLEWARE ===== *****/////
@@ -56,6 +54,7 @@ app.get('/api',(req, res)=> {
 });
 
 
+
 /**
  * Category 
  */
@@ -65,7 +64,6 @@ app.get('/api',(req, res)=> {
 // get all categories
 app.get('/api/category',(req, res)=> {
     db.Category.find({})
-    .populate('posts')
     .exec((err,categories)=> {
         if (err) { res.status(500).json({error:'internal error'}); }
         res.json(categories);
@@ -76,9 +74,14 @@ app.get('/api/category',(req, res)=> {
 app.get('/api/category/:cat_id',(req, res)=> {
     db.Category.findById(req.params.cat_id)
     .populate('posts')
-    .exec((err,categories)=> {
+    .exec((err,category)=> {
         if (err) { res.status(500).json({error:'internal error'}); }
-        res.json(categories);
+        db.Post.find({'categories': {'$in': category._id}})
+        .populate('users')
+        .exec((err,posts)=> {
+            if (err) { res.status(500).json({error:'internal error'}); }
+            res.json({'category': category, 'posts': posts});
+        });
     });
 });
 
@@ -89,12 +92,23 @@ app.post('/api/category/',(req, res)=> {
     var newCategory= new db.Category({
         'name': req.body.name,
         'description': req.body.description,
-        'posts': []
     });
     newCategory.save((err, savedCategory)=> {
         if (err) { res.status(500).json({error:'internal error:',description: err}); }
         console.log('saved Category= ',savedCategory.name,' describing ',savedCategory.description);
         res.json(savedCategory);
+    });
+});
+
+/*== PUT ==*/
+
+// update one category by category_id
+app.put('/api/category/:cat_id',(req, res)=> {
+    var reqID= req.params.cat_id;
+    console.log('updating category',reqID);
+    db.Category.findOneAndUpdate({_id: reqID},req.body,{new: true}, (err, editCategory)=> {
+        if (err) { res.status(500).json({error:'internal error:',description: err}); }
+        res.json(editCategory);
     });
 });
 
@@ -109,21 +123,25 @@ app.post('/api/category/',(req, res)=> {
 app.get('/api/users',(req, res)=> {
     db.User.find({})
     .populate('preference')
-    .populate('posts')
     .exec((err,users)=> {
         if (err) { res.status(500).json({error:'internal error'}); }
         res.json(users);
     });
 });
 
+
 // get one user by user_id
 app.get('/api/users/:user_id',(req, res)=> {
     db.User.findById(req.params.user_id)
     .populate('preference')
-    .populate('posts')
     .exec((err,users)=> {
         if (err) { res.status(500).json({error:'internal error'}); }
-        res.json(users);
+        db.Post.find({'post_by': users._id})
+        .populate('users')
+        .exec((err,posts)=> {
+            if (err) { res.status(500).json({error:'internal error'}); }
+            res.json({'user': users, 'posts': posts});
+        });
     });
 });
 
@@ -138,7 +156,6 @@ app.post('/api/users',(req, res)=> {
         'location': req.body.location,
         'join_date': req.body.join_date,
         'img_url': req.body.img_url,
-        'posts': [],
         'preference': req.body.preference
     });
 
@@ -148,6 +165,46 @@ app.post('/api/users',(req, res)=> {
     });
     
 });
+
+/*== PUT ==*/
+
+// app.get('/something', (req,res) => {
+//     var arr= [];
+//     req.body.preference.forEach((pref) => {
+//         db.Category.findOne({'name': pref},(err1,foundCat)=> {
+//             console.log(`foundcat ${foundCat._id}`);
+//             if (err1) { return console.log(err1); }
+//             arr.push(foundCat);
+//         });
+//     });
+//     if (arr!=null) res.json(arr);
+// })
+
+// update user info
+app.put('/api/users/:user_id',(req, res)=> {
+    var reqID= req.params.user_id;
+    db.User.findOneAndUpdate({_id: reqID},
+    {
+        '$set': {
+        'username': req.body.username,
+        'email': req.body.email,
+        'password': req.body.password,
+        'location': req.body.location,
+        'img_url': req.body.img_url,
+        'preference': req.body.preference,
+        }
+    },
+    {new:true}, (err, editUser)=> {
+    if (err) { res.status(500).json({error:'internal error:',description: err}); }
+    
+    //console.log(req.body.preference)
+    
+    res.json(editUser);
+    });
+    
+});
+
+
 
 
 /**
@@ -167,7 +224,7 @@ app.get('/api/posts',(req, res)=> {
     });
 });
 
-// get all posts
+// get post by post_id
 app.get('/api/posts/:post_id',(req, res)=> {
     db.Post.findById(req.params.post_id)
     .populate('categories')
@@ -220,10 +277,60 @@ app.get('/api/category/:cat_id/posts/:post_id', (req, res)=> {
     });
 });
 
+/*== POST ==*/
+
+// create a new post from user_id
+app.post('/api/users/:user_id/posts', (req, res)=> {
+    var newPost= new db.Post({
+        'title': req.body.title,
+        'date_of_post': req.body.date_of_post,
+        'description': req.body.description,
+        'images': req.body.images,
+        'categories': req.body.categories,
+        'post_by': req.params.user_id
+    });
+    newPost.save((err,savedPost)=> {
+        if (err) { res.status(500).json({error:'internal error', 'description': err}); }
+        res.json(savedPost);
+    });
+});
+
+/*== PUT ==*/
+
+// update an existing post by post_id from user_id
+app.put('/api/users/:user_id/posts/:post_id', (req, res)=> {
+    var edit= {
+        'title': req.body.title,
+        'description': req.body.description,
+        'images': req.body.images,
+        'categories': req.body.categories
+    };
+    db.Post.findOneAndUpdate({
+        '_id': req.params.post_id, 
+        'post_by': req.params.user_id
+    },
+    {'$set': edit},{new: true},(err,editPost)=> {
+        if (err) { res.status(404).json({error:'not found', 'description': err}); }
+        console.log(editPost);
+        res.json(editPost);
+    });
+});
+
+/*== DELETE ==*/
+
+// delete an existing post by post_id from user_id
+app.delete('/api/users/:user_id/posts/:post_id', (req, res)=> {
+    db.Post.findById(req.params.post_id)
+    .exec((err,deletePost)=> {
+        if (err) { res.status(404).json({error:'not found', 'description': err}); }
+        res.json(deletePost);
+    });
+});
 
 
 
 /////***** ===== PORT LISTENING ===== *****/////
 
 app.listen(process.env.PORT || portNum);
+
 
