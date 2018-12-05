@@ -1,8 +1,8 @@
 console.log('sanity check...');
 
 var maxLen= 150;
-var $categories;
-var $userid;
+var $categories, $userid, $prefs, $initVal;
+
 
 function startProfilePage() {
     $userid= $(location).attr('href').split('=')[1];
@@ -54,7 +54,7 @@ function getPosts(posts,target) {
               </span>
             </p>
           </div>
-          <button name='delete_post' class='btn btn-danger'>Delete</button>
+          <button name='delete_post' class='btn btn-danger'>&times;</button>
         </article>
         
         `);
@@ -75,7 +75,7 @@ function createPostData() {
     for (var i=0;i<$selectedCat.length;i++) {
         category.push($selectedCat.eq(i).find('option:selected').val());
     }
-    dataObj['ccategories']= category;
+    dataObj['categories']= category;
     // get images
     var imgs= [];
     var $imgURLs= $createPost.find('.more_imgs').children();
@@ -106,8 +106,9 @@ function getUserInfo($user,$posts) {
     $('[name=join_date]').html(`${$user.join_date}`);
     for (var i=0;i<$user.preference.length;i++) {
         var $pref= $user.preference[i];
-        $(`[name=pref${i+1}]`).attr('data-id',$pref._id);
-        $(`[name=pref${i+1}]`).html(`${$pref.name}`);
+        $('div[name=display_pref]').append(`
+        <span name='pref${i+1}' data-id='${$pref._id}' class='label label-info'>${$pref.name}</span>
+        `);
     }
     getPosts($posts,'#user_posts');
     $('#modal-post-create p[name=email]').html(`${$user.email}`);
@@ -150,6 +151,30 @@ function clearPostModal() {
     $modalBody= $modal.find('.modal-body').html('');
 }
 
+function instantUpdateByField(field,target,oldTag) {
+    // click on area to change
+    $(target).on('click',`${oldTag}[name=${field}]`,function(){
+        $initVal= $(this).html();
+        $(this).replaceWith($(`<input name='${field}' value='${$(this).html()}' required>`));
+        $(`${target} input[name=${field}]`).focus();
+    });
+
+    $(target).on('blur',`input[name=${field}]`,function(){
+        var $text= $(this).val();
+        if ($text=='') return;
+        $(this).replaceWith($(`<${oldTag} name='${field}'>${$text}</${oldTag}>`));
+        if ($text==$initVal) return;
+        var dataObj={}; dataObj[field]= $text;
+        $.ajax({
+            'type': 'PATCH',
+            'url': `/api/users/${$userid}`,
+            'data': JSON.stringify(dataObj),
+            'contentType': 'application/json',
+            'success': function(output){ location.reload(); },
+            'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
+        });
+    });
+}
 
 
 $(document).ready(function(){
@@ -170,6 +195,8 @@ $(document).ready(function(){
 
     $('button[name=create_post]').on('click', function(event){
         var dataObj= createPostData();
+        //console.log(dataObj);
+        //return;
         if (dataObj=={}) return;
         ///*
         $.ajax({
@@ -196,5 +223,61 @@ $(document).ready(function(){
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
     });
+
+    instantUpdateByField('username','div','h3');
+    instantUpdateByField('location','div','h3');
+    
+    // click on edit preference
+    $('button[name=edit_pref]').on('click',function(){
+        $('button[name=close_pref]').css('display','inline-block');
+        $('button[name=save_pref]').css('display','inline-block');
+        $('button[name=edit_pref]').css('display','none');
+        $prefs= $('div[name=display_pref]').children();
+
+        $('div[name=display_pref]').html('');
+        for (var i=0;i<$prefs.length;i++) {
+            $('div[name=display_pref]').append(`
+            <input type='checkbox' value='${$prefs.eq(i).attr('data-id')}' checked>${$prefs.eq(i).html()}`);
+        }
+        for (var i=0;i<$categories.length;i++) {
+            var cat= $categories[i];
+            if ($('div[name=display_pref]').find(`input[value=${cat._id}]`).length>0) continue;
+            $('div[name=display_pref]').append(`<input type='checkbox' value='${cat._id}'>${cat.name}`);
+        }
+    });
+
+    $('button[name=close_pref]').on('click',function(){
+        $('button[name=close_pref]').css('display','none');
+        $('button[name=save_pref]').css('display','none');
+        $('button[name=edit_pref]').css('display','inline-block');
+        
+        $('div[name=display_pref]').html('');
+        for (var i=0;i<$prefs.length;i++) {
+            $('div[name=display_pref]').append(`${$prefs.eq(i)[0].outerHTML}`);
+        };
+    });
+
+    $('button[name=save_pref]').on('click',function(){
+        var $checked= $('input[type=checkbox]:checked');
+        if ($checked.length<1) return;
+        console.log('ok');
+
+        var $selectedPref= [];
+        for (var i=0;i<$checked.length;i++) {
+            $selectedPref.push($checked.eq(i).val());
+        }
+        console.log($selectedPref);
+        var dataObj= {'preference': $selectedPref};
+        $.ajax({
+            'type': 'PATCH',
+            'url': `/api/users/${$userid}`,
+            'data': JSON.stringify(dataObj),
+            'contentType': 'application/json',
+            'success': function(output){ location.reload(); },
+            'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
+        });
+
+    });
     
 });
+

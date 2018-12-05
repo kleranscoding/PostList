@@ -6,6 +6,10 @@ html, body {
     text-align: center;
 }
 
+body {
+    font-family: 'Rubik', sans-serif;
+}
+
 /* 
 .banner-pic {
     height: 100px;

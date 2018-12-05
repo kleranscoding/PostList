@@ -102,7 +102,6 @@ app.put('/api/category/:cat_id', ctrl.category.update);
 // get all users
 app.get('/api/users', ctrl.user.index);
 
-
 // get one user by user_id
 app.get('/api/users/:user_id', ctrl.user.show);
 
@@ -127,6 +126,19 @@ app.post('/api/users', ctrl.user.create);
 
 // update user info
 app.put('/api/users/:user_id', ctrl.user.update);
+
+// update user some info
+app.patch('/api/users/:user_id', (req,res)=>{
+    console.log(req.body);
+    db.User.findOneAndUpdate(
+        {'_id': req.params.user_id},
+        {'$set': req.body},
+        {new: true},
+        (err,updateOne)=> {
+            if (err) { res.status(500).json({error:'internal error:',description: err}); }
+            res.json(updateOne);
+    });
+});
 
 
 /**

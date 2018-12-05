@@ -8,6 +8,11 @@ textarea {
     height: 200px;
 }
 
+div[name=display_pref] span {
+    margin: 5px;
+    font-size: 1.25rem;
+}
+
 .col-1 { 
     height : 20vh;
     text-align: center;
@@ -18,8 +23,18 @@ textarea {
     padding: 40px;
 }
 
-#modal-post-create h2 {
-    /* width: 60%; */
+.col-md-6, .col-md-4 {
+    text-align: left;
+}
+
+.col-md-6, .col-md-4, .col-md-2 {
+    border-radius: 5px;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+.preference {
+    margin-bottom: 20px;
 }
 
 #modal-post-create .modal-dialog{
