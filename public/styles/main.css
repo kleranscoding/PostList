@@ -81,7 +81,9 @@ nav li:nth-child(4) {
     text-align: left;
 }
 
-
+.label-info {
+    font-size: 1.25rem;
+}
 
 #modal-post .modal-dialog{
     margin: 10px 5%;

@@ -1,39 +1,104 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>Postlist Newuser</title>
-    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <meta charset='utf-8'>
+    <title>PostList</title>
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='styles/main.css'>
+    <link rel='stylesheet' href='styles/profile.css'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src='scripts/profile.js' defer></script>
   </head>
   <body>
 
-    <div class="container">
+    <div class='container'>
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
-    <div class="row">
-            <div class="col-1">
-                <h1>Welcome Newuser..</h1>
-            </div>
+      <div class='row'>
+        <div class='col-1'>
+          <h1 class='welcome'></h1>
         </div>
-<!-- Columns are always 50% wide, on mobile and desktop -->
-    <div class="row">
-    <div class="col-xs-6"><a href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ8xzdv564ewROcTBYDdv51oTD5SgNOCDDwMw4XXIdvxFGyQzn"alt="user"></a></div>
-    <div class="col-xs-6">
-    <h3>Newuser</h3><br>
-    <h3>San Francisco</h3><br>
-    <h3>Date Joined:</h3><br>
-    <h3>https://www.postlist.com/Newuser</h3>
-    </div>
-    </div>
-
-
-<!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
-<div class="row">
-  <div class="col-xs-6 col-md-4"> Pref#1 </div>
-  <div class="col-xs-6 col-md-4"> Pref#2 </div>
-  <div class="col-xs-6 col-md-4"> ... </div>
-</div>
       </div>
+      <!-- Columns are always 50% wide, on mobile and desktop -->
+      <div class='row'>
+        <div class='col-xs-6'>
+          <img name='img' src=''alt='user'></a>
+        </div>
+        <div class='col-xs-6'>
+          <h3 name='username'></h3>
+          <h3 name='email'></h3>
+          <h3 name='location'></h3>
+          <h3 name='join_date'></h3>
+          <button id='create_post' type='button' class='btn btn-success'>+ create post</button>
+        </div>
+      </div>
+
+      <!-- Columns start at 50% wide on mobile and bump up to 33.3% wide on desktop -->
+      <div class='row'>
+        <h3>Preference </h3>
+        <span name='pref1' class='label label-info'></span>
+        <span name='pref2' class='label label-info'></span>
+        <span name='pref3' class='label label-info'></span>
+      </div>
+
+      <div id='user_posts' class='container'></div>
+
+    </div>
+
+    <article class='modal fade' id='modal-post' tabindex='-1' role='dialog'>
+        <div class='modal-dialog' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                <span aria-hidden='true'><h1>&times;</h1></span>
+              </button>
+              <h2 class='modal-title'></h2>
+            </div>
+            <div class='modal-body'></div> 
+            <div class='modal-footer'>
+              <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class='modal fade' id='modal-post-create' tabindex='-1' role='dialog'>
+        <div class='modal-dialog' role='document'>
+          <div class='modal-content'>
+            <div class='modal-header'>
+              <h2 class='modal-title'>
+                <input name='title' type='text' placeholder='Title' required> 
+              </h2>
+              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                <span aria-hidden='true'><h1>&times;</h1></span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              <h4>Select Category...</h4>
+              <div class='more_categories'>
+                <select name='cat1'></select>
+              </div>
+              <h4>Please enter a brief description...</h4>
+              <textarea name='description' placeholder='Description' required></textarea>
+              <!-- <h3><input type='text' placeholder=''></h3> -->
+              <h4>Contact Info</h4>
+              <p name='email'></p>
+              <p><input type='text' placeholder='phone'></p>
+              <p><input type='text' placeholder='facebook, ig'></p>
+              <h4>Include some images too...</h4>
+              <div class='more_imgs'>
+                <p><input type='text' placeholder='image_url'></p>
+              </div>
+              <button type='button' id='more_img_url' class='btn btn-primary'>add more images</button>
+            </div>
+            <div class='modal-footer'>
+              <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+              <button type='button' name='create_post' class='btn btn-success'>Create</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
   </body>
 </html>
