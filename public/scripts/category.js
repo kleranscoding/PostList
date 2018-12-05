@@ -103,12 +103,12 @@ $(document).ready(function(){
                 });
                 
                 $modalBody.append(`
-                <p>Categories: ${$categories} </p>
-                <p>Posted By: <span>${post.post_by.username}</span></p>
-                <p>Date: <span>${post.date_of_post}</span></p>
-                <p>Location: <span>${post.post_by.location}</span></p>
-                <p><section><h4>${post.description}</h4></section></p>
-                <p>Contact Info: <span>${post.contact_info}</span></p>
+                  <p>Categories: ${$categories} </p>
+                  <p>Posted By: <span>${post.post_by.username}</span></p>
+                  <p>Date: <span>${post.date_of_post}</span></p>
+                  <p>Location: <span>${post.post_by.location}</span></p>
+                  <p><section><h4>${post.description}</h4></section></p>
+                  <p>Contact Info: <span>${post.contact_info}</span></p>
                 `);
                 //html($article.attr('data-id'));
             },

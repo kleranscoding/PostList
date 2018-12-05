@@ -96,7 +96,7 @@ module.exports= {
     },
 
     'delete': (req, res)=> {
-        db.Post.findById(req.params.post_id)
+        db.Post.remove({'_id': req.params.post_id})
         .exec((err,deletePost)=> {
             if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
             res.json(deletePost);

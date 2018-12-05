@@ -54,7 +54,9 @@ function getPosts(posts,target) {
               </span>
             </p>
           </div>
+          <button name='delete_post' class='btn btn-danger'>Delete</button>
         </article>
+        
         `);
     });
 }
@@ -184,7 +186,15 @@ $(document).ready(function(){
         });
         //*/
     });
+
+    $('#user_posts').on('click','button[name=delete_post]',function(){
+        var $post_id= $(this).parent().attr('data-id');
+        $.ajax({
+            'method': 'DELETE',
+            'url': `/api/users/${$userid}/posts/${$post_id}`,
+            'success': function(data) { location.reload(); },
+            'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
+        });
+    });
     
 });
-
-
