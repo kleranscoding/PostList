@@ -41,72 +41,140 @@
                 <button name='save_pref' class='btn btn-success' style='display:none'>save</button>
               </div>
             </h3>
-            <div name='display_pref' class='col-md-12'>
-
-            </div>
-            
+            <div name='display_pref' class='col-md-12'></div>
           </div>
         </div>
       </div>
-
-      <h3>Your PostList <button id='create_post' type='button' class='btn btn-success'>+ create post</button></h3>
+      <h3>Your #PostList <button id='create_post' type='button' class='btn btn-success'>+ create post</button></h3>
       <div id='user_posts' class='container'></div>
-
     </div>
 
+    <!-- display post with modal -->
     <article class='modal fade' id='modal-post' tabindex='-1' role='dialog'>
-        <div class='modal-dialog' role='document'>
-          <div class='modal-content'>
-            <div class='modal-header'>
-              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-              </button>
-              <h2 class='modal-title'></h2>
+      <div class='modal-dialog' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+            <h2 class='modal-title' name='title'></h2>
+          </div>
+          <div class='modal-body'>
+            <div name='image-container'></div>
+            <div class='alert'>
+              <p>Category:</p> 
+              <p name='category-container'>
+              </p>
+              <p name='post-by-container'>
+                Post By: <span></span>
+              </p>
+              <p name='date-container'>
+                Date: <span></span> 
+              </p>
             </div>
-            <div class='modal-body'></div> 
-            <div class='modal-footer'>
-              <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+            <div class='alert'>
+              <p name='descrp-container'>
+                <span></span>
+              </p>
+              <hr>
+              <p class='mb-0' name='contact-container'>
+                Contact Info: <span></span> 
+              </p>
             </div>
+          </div> 
+          <div class='modal-footer'>
+            <button type='button' name='edit_post' class='btn btn-success'>Edit</button>
+            <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
           </div>
         </div>
-      </article>
+      </div>
+    </article>
 
-      <article class='modal fade' id='modal-post-create' tabindex='-1' role='dialog'>
-        <div class='modal-dialog' role='document'>
-          <div class='modal-content'>
-            <div class='modal-header'>
-              <h3 class='modal-title'>
-                <input name='title' type='text' placeholder='Title' required> 
-              </h3>
-              <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                <span aria-hidden='true'>&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              <h4>Select Category...</h4>
-              <div class='more_categories'>
-                <select name='cat1'></select>
+    <!-- edit post with modal -->
+    <article class='modal fade' id='modal-post-edit' tabindex='-1' role='dialog'>
+      <div class='modal-dialog' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <!-- <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button> -->
+            <h3 class='modal-title'>
+              <input type='text' name='title' placeholder='Title'>
+            </h3>
+          </div>
+          <div class='modal-body'>
+            <div name='image-container'></div>
+            <div class='alert'>
+              <div name='category-container'>
+                <p>Category:</p>
+                <div name='display_cat' class='col-md-12'></div>
               </div>
-              <h4>Please enter a brief description...</h4>
-              <textarea name='description' placeholder='Description' required></textarea>
-              <!-- <h3><input type='text' placeholder=''></h3> -->
-              <h4>Contact Info</h4>
-              <p name='email'></p>
-              <p><input type='text' placeholder='phone'></p>
-              <p><input type='text' placeholder='facebook, ig'></p>
-              <h4>Include some images too...</h4>
-              <div class='more_imgs'>
-                <p><input type='text' placeholder='image_url'></p>
-              </div>
-              <button type='button' id='more_img_url' class='btn btn-primary'>add more images</button>
+              <!--
+              <p name='post-by-container'>
+                Post By: <span></span>
+              </p>
+              <p name='date-container'>
+                Date: <span></span> 
+              </p>
+              -->
             </div>
-            <div class='modal-footer'>
-              <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
-              <button type='button' name='create_post' class='btn btn-success'>Create</button>
+            <textarea name='descrp' style='resize:none' placeholder='Description'>
+            </textarea>
+            <div class='contact-info'>
+              <p class='mb-0' name='contact-container'>
+                Contact Info:
+                <span name='email'></span> 
+                <br>
+                Additional contact: 
+                <input type='text' name='contact_info' placeholder='e.g. phone, facebook, instagram, etc.'>
+              </p>
             </div>
+          </div> 
+          <div class='modal-footer'>
+            <button type='button' name='cancel' class='btn btn-secondary'>Cancel</button>
+            <button type='button' name='save_post' class='btn btn-success'>Save</button>
           </div>
         </div>
-      </article>
+      </div>
+    </article>
+
+    <!-- create post with modal -->
+    <article class='modal fade' id='modal-post-create' tabindex='-1' role='dialog'>
+      <div class='modal-dialog' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h3 class='modal-title'>
+              <input name='title' type='text' placeholder='Title' required> 
+            </h3>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>
+          <div class='modal-body'>
+            <h4>Select Category...</h4>
+            <div class='more_categories'>
+              <select name='cat1'></select>
+            </div>
+            <h4>Please enter a brief description...</h4>
+            <textarea name='description' placeholder='Description' required></textarea>
+            <!-- <h3><input type='text' placeholder=''></h3> -->
+            <h4>Contact Info</h4>
+            <p name='email'></p>
+            <p><input type='text' placeholder='phone'></p>
+            <p><input type='text' placeholder='facebook, ig'></p>
+            <h4>Include some images too...</h4>
+            <div class='more_imgs'>
+              <p><input type='text' placeholder='image_url'></p>
+            </div>
+            <button type='button' id='more_img_url' class='btn btn-primary'>add more images</button>
+          </div>
+          <div class='modal-footer'>
+            <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+            <button type='button' name='create_post' class='btn btn-success'>Create</button>
+          </div>
+        </div>
+      </div>
+    </article>
 
   </body>
 </html>

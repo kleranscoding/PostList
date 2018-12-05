@@ -172,8 +172,23 @@ app.post('/api/users/:user_id/posts', ctrl.post.create);
 
 /*== PUT ==*/
 
-// update an existing post by post_id from user_id
+// update an existing post by post_id from user_id (PUT)
 app.put('/api/users/:user_id/posts/:post_id', ctrl.post.update);
+
+/*== PATCH ==*/
+
+// update an existing post by post_id from user_id (PATCH)
+app.patch('/api/users/:user_id/posts/:post_id', (req,res)=>{
+    console.log(req.body);
+    db.Post.findOneAndUpdate(
+        {'_id': req.params.post_id, 'post_by': req.params.user_id},
+        {'$set': req.body},
+        {new: true},
+        (err,updateOne)=> {
+            if (err) { res.status(500).json({error:'internal error:',description: err}); }
+            res.json(updateOne);
+    });
+});
 
 /*== DELETE ==*/
 

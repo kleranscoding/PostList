@@ -13,6 +13,21 @@ div[name=display_pref] span {
     font-size: 1.25rem;
 }
 
+button[name=delete_post] {
+    top: 2px;
+    right: 2px;
+    position: absolute;
+}
+
+p[name=descrp-container] {
+    text-align: left;
+}
+
+.alert {
+    width: 60%;
+    margin: 5px 20%;
+}
+
 .col-1 { 
     height : 20vh;
     text-align: center;
@@ -37,15 +52,32 @@ div[name=display_pref] span {
     margin-bottom: 20px;
 }
 
-#modal-post-create .modal-dialog{
+.modal {
+    overflow-y: scroll;
+}
+
+#modal-post-edit textarea {
+    width: 80%;
+    margin: 10px;
+    padding: 10px;
+}
+
+#modal-post-create .modal-dialog, #modal-post-edit .modal-dialog {
     margin: 10px 5%;
     width: 90%;
     height: 100%;
 }
 
-button[name=delete_post] {
-    top: 2px;
-    right: 2px;
-    position: absolute;
+#modal-post-edit [name=title] {
+    width: 80%;
+}
+
+#modal-post-edit .contact-info {
+    text-align: left;
+}
+
+
+#modal-post-edit [name=contact_info] {
+    width: 60%;
 }
 

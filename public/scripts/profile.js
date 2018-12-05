@@ -1,22 +1,9 @@
 console.log('sanity check...');
 
-var maxLen= 150;
-var $categories, $userid, $prefs, $initVal;
+const maxLen= 150;
+var $categories, $userid, $prefs, $initProfileVal, $postid;
 
-
-function startProfilePage() {
-    $userid= $(location).attr('href').split('=')[1];
-    console.log($userid);
-    $.ajax({
-        'method': 'GET',
-        'url': `/api/users/${$userid}`,
-        'success': function(user) {
-            getUserInfo(user.user,user.posts);
-        },
-        'error': function(err1,err2,err3) {
-            console.log(err1,err2,err3);
-        }
-    });
+function getCategory() {
     $.ajax({
         'method': 'GET',
         'url': '/api/category',
@@ -28,6 +15,19 @@ function startProfilePage() {
                 `);
             });
             $('select[name=pref1]').children().eq(0).attr('selected','selected');
+        },
+        'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
+    });
+}
+
+function startProfilePage() {
+    $userid= $(location).attr('href').split('=')[1];
+    console.log($userid);
+    $.ajax({
+        'method': 'GET',
+        'url': `/api/users/${$userid}`,
+        'success': function(user) {
+            getUserInfo(user.user,user.posts);
         },
         'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
     });
@@ -56,7 +56,6 @@ function getPosts(posts,target) {
           </div>
           <button name='delete_post' class='btn btn-danger'>&times;</button>
         </article>
-        
         `);
     });
 }
@@ -85,14 +84,10 @@ function createPostData() {
     dataObj['images']= imgs;
     var today= new Date();
     // get timestamp
-    var timestamp= { 
-        'year': today.getFullYear(),
-        'month': today.getMonth()+1,
-        'day': today.getDay()+1
-    };
+    var timestamp= {'year': today.getFullYear(), 'month': today.getMonth()+1, 'day': today.getDay()+1 };
     timestamp['day']= (timestamp['day']>=1 && timestamp['day']<=9)? `0${timestamp['day']}`: timestamp['day'];
     dataObj['date_of_post']= `${timestamp['year']}-${timestamp['month']}-${timestamp['day']}`;
-    console.log(dataObj['date_of_post']);
+    //console.log(dataObj['date_of_post']);
     return dataObj;
 }
 
@@ -114,8 +109,25 @@ function getUserInfo($user,$posts) {
     $('#modal-post-create p[name=email]').html(`${$user.email}`);
 }
 
-function populateModal(){
+function targetValByName(target,tag1,tag2,name,val) {
+    target.find(`${tag1}[name=${name}] ${tag2}`).val(val);
+}
+
+function targetHTMLByName(target,tag1,tag2,name,val) {
+    target.find(`${tag1}[name=${name}] ${tag2}`).html(val);
+}
+
+function getTargetHTMLByName(target,tag1,tag2,name) {
+    return target.find(`${tag1}[name=${name}] ${tag2}`).html();
+}
+
+function getTargetValByName(target,tag1,tag2,name) {
+    return target.find(`${tag1}[name=${name}] ${tag2}`).val();
+}
+
+function populateViewModal(){
     var $article= $(this).parent().parent().parent();
+    $postid= $article.attr('data-id');
     var $modal= $('#modal-post');
     $modal.modal('toggle');
     // populate post
@@ -126,35 +138,65 @@ function populateModal(){
             var $modalBody= $modal.find('.modal-body');
             $modal.find('.modal-title').html(post.title);
             post.images.forEach((img)=> {
-                $modalBody.append(`<img src='${img}'>`)
+                $modalBody.find('[name=image-container]').append(`<img src='${img}'>`)
             });
             var $categories= '';
             post.categories.forEach((cat)=> {
-                $categories+= `<span class='label label-info'>${cat.name}</span> `;
+                $categories+= `<span class='label label-info' data-id='${cat._id}'>${cat.name}</span>`;
             });
-            $modalBody.append(`
-              <p>Categories: ${$categories} </p>
-              <p>Posted By: <span>${post.post_by.username}</span></p>
-              <p>Date: <span>${post.date_of_post}</span></p>
-              <p>Location: <span>${post.post_by.location}</span></p>
-              <p><section><h4>${post.description}</h4></section></p>
-              <p>Contact Info: <span>${post.contact_info}</span></p>
-            `);
+            $modalBody.find('p[name=category-container]').append($categories);
+            targetHTMLByName($modalBody,'p','span','post-by-container',post.post_by.username);
+            targetHTMLByName($modalBody,'p','span','date-container',post.date_of_post);
+            targetHTMLByName($modalBody,'p','span','location-container',post.post_by.location);
+            targetHTMLByName($modalBody,'p','span','descrp-container',`${post.description}`);
+            targetHTMLByName($modalBody,'p','span','contact-container',post.contact_info);
         },
         'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
     });
 }
 
-function clearPostModal() {
+function clearViewModal() {
+    $postid= '';
     var $modal= $('#modal-post');
     $modal.find('.modal-title').html('');
-    $modalBody= $modal.find('.modal-body').html('');
+    $modal.find('.modal-body').find('[name=image-container]').html('');
+    $modal.find('.modal-body').find('p[name=category-container]').html('');
+    //$modalBody= $modal.find('.modal-body').html('');
 }
+
+function clearEditModal() {
+    var $modal= $('#modal-post-edit');
+    $modal.find('.modal-title').html('');
+    console.log($('#modal-post-edit').find('div[name=display_cat]'));
+    $modal.find('.modal-body').find('[name=image-container]').html('');
+    $modal.find('.modal-body').find('div[name=category-container] span').html('');
+}
+
+function createNewPost() {
+    var dataObj= createPostData();
+    //console.log(dataObj);
+    if (dataObj=={}) return;
+    ///*
+    $.ajax({
+        'method': 'POST',
+        'url': `/api/users/${$userid}/posts`,
+        'dataType': 'json',
+        'data': JSON.stringify(dataObj),
+        'contentType': 'application/json',
+        'success': function(data) {
+            //$('#modal-post-create').modal('toggle');
+            location.reload();
+        },
+        'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
+    });
+    //*/
+}
+
 
 function instantUpdateByField(field,target,oldTag) {
     // click on area to change
     $(target).on('click',`${oldTag}[name=${field}]`,function(){
-        $initVal= $(this).html();
+        $initProfileVal= $(this).html();
         $(this).replaceWith($(`<input name='${field}' value='${$(this).html()}' required>`));
         $(`${target} input[name=${field}]`).focus();
     });
@@ -163,7 +205,7 @@ function instantUpdateByField(field,target,oldTag) {
         var $text= $(this).val();
         if ($text=='') return;
         $(this).replaceWith($(`<${oldTag} name='${field}'>${$text}</${oldTag}>`));
-        if ($text==$initVal) return;
+        if ($text==$initProfileVal) return;
         var dataObj={}; dataObj[field]= $text;
         $.ajax({
             'type': 'PATCH',
@@ -179,6 +221,8 @@ function instantUpdateByField(field,target,oldTag) {
 
 $(document).ready(function(){
     
+    getCategory();
+
     startProfilePage();
     
     $('#create_post').on('click', function(){
@@ -186,33 +230,20 @@ $(document).ready(function(){
         $('#more_img_url').on('click', function(){
             $('.more_imgs').append(`<p><input type='text' placeholder='image_url'></p>`);
         });
-        
     });
 
-    $('#modal-post button[data-dismiss=modal]').on('click',clearPostModal);
+    $('#modal-post button[data-dismiss=modal]').on('click',clearViewModal);
+
+    $('#modal-post-edit button[name=cancel]').on('click',function(){
+        $('#modal-post-edit').modal('toggle');
+        $('#modal-post').modal('toggle');
+        console.log($('#modal-post-edit').find('div[name=display_cat]'));
+        $('#modal-post-edit').find('div[name=display_cat]').html('');
+    });
     
-    $('#user_posts').on('click','.learn-more',populateModal);
+    $('#user_posts').on('click','.learn-more',populateViewModal);
 
-    $('button[name=create_post]').on('click', function(event){
-        var dataObj= createPostData();
-        //console.log(dataObj);
-        //return;
-        if (dataObj=={}) return;
-        ///*
-        $.ajax({
-            'method': 'POST',
-            'url': `/api/users/${$userid}/posts`,
-            'dataType': 'json',
-            'data': JSON.stringify(dataObj),
-            'contentType': 'application/json',
-            'success': function(data) {
-                $('#modal-post-create').modal('toggle');
-                location.reload();
-            },
-            'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
-        });
-        //*/
-    });
+    $('button[name=create_post]').on('click',createNewPost);
 
     $('#user_posts').on('click','button[name=delete_post]',function(){
         var $post_id= $(this).parent().attr('data-id');
@@ -227,7 +258,7 @@ $(document).ready(function(){
     instantUpdateByField('username','div','h3');
     instantUpdateByField('location','div','h3');
     
-    // click on edit preference
+    // edit preference
     $('button[name=edit_pref]').on('click',function(){
         $('button[name=close_pref]').css('display','inline-block');
         $('button[name=save_pref]').css('display','inline-block');
@@ -246,6 +277,7 @@ $(document).ready(function(){
         }
     });
 
+    // close edit preference
     $('button[name=close_pref]').on('click',function(){
         $('button[name=close_pref]').css('display','none');
         $('button[name=save_pref]').css('display','none');
@@ -256,17 +288,15 @@ $(document).ready(function(){
             $('div[name=display_pref]').append(`${$prefs.eq(i)[0].outerHTML}`);
         };
     });
-
+    
+    // save preference
     $('button[name=save_pref]').on('click',function(){
         var $checked= $('input[type=checkbox]:checked');
         if ($checked.length<1) return;
-        console.log('ok');
-
+        
         var $selectedPref= [];
-        for (var i=0;i<$checked.length;i++) {
-            $selectedPref.push($checked.eq(i).val());
-        }
-        console.log($selectedPref);
+        for (var i=0;i<$checked.length;i++) { $selectedPref.push($checked.eq(i).val()); }
+        //console.log($selectedPref);
         var dataObj= {'preference': $selectedPref};
         $.ajax({
             'type': 'PATCH',
@@ -277,6 +307,61 @@ $(document).ready(function(){
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
 
+    });
+
+    $('button[name=edit_post]').on('click',function(){
+        $('#modal-post').modal('toggle');
+        $('#modal-post-edit').modal('toggle');
+        var $modalBodyEdit= $('#modal-post-edit .modal-body');
+        var $modalBody= $('#modal-post .modal-body');
+        var $postCategories= $modalBody.find('p[name=category-container] span');
+        $('div[name=display_cat]').html('');
+        for (var i=0;i<$postCategories.length;i++) {
+            $('div[name=display_cat]').append(`
+            <input type='checkbox' value='${$postCategories.eq(i).attr('data-id')}' checked>${$postCategories.eq(i).html()}
+            `);
+        }
+        for (var i=0;i<$categories.length;i++) {
+            var cat= $categories[i];
+            if ($('div[name=display_cat]').find(`input[value=${cat._id}]`).length>0) continue;
+            $('div[name=display_cat]').append(`<input type='checkbox' value='${cat._id}'>${cat.name}`);
+        }
+        targetValByName($('#modal-post-edit'),'input','','title',getTargetHTMLByName($('#modal-post'),'h2','','title'));
+        targetValByName($modalBodyEdit,'textarea','','descrp',getTargetHTMLByName($modalBody,'p','span','descrp-container'));
+        targetValByName($modalBodyEdit,'input','','contact_info',getTargetHTMLByName($modalBody,'p','span','contact-container'));
+    });
+
+    $('button[name=save_post]').on('click',function(){
+        console.log('update');
+        var $checked= $('div input[type=checkbox]:checked');
+        console.log($checked.length);
+        if ($checked.length<1) return;
+        var $modalBodyEdit= $('#modal-post-edit .modal-body');
+        var $title= getTargetValByName($('#modal-post-edit'),'input','','title');
+        if ($title=='') return;
+        var $descrp= getTargetValByName($modalBodyEdit,'textarea','','descrp');
+        if ($descrp=='') return;
+        $additionalContact= getTargetValByName($modalBodyEdit,'input','','contact_info');
+        var $contactInfo= $additionalContact; 
+        
+        var $selectedCat= [];
+        for (var i=0;i<$checked.length;i++) { $selectedCat.push($checked.eq(i).val()); }
+        var dataObj= {
+            'title': $title,
+            'description': $descrp,
+            'categories': $selectedCat,
+            'contact_info': $contactInfo
+        };
+        
+        $.ajax({
+            'type': 'PATCH',
+            'url': `/api/users/${$userid}/posts/${$postid}`,
+            'data': JSON.stringify(dataObj),
+            'contentType': 'application/json',
+            'success': function(output){ location.reload(); },
+            'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
+        });
+        
     });
     
 });
