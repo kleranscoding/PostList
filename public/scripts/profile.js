@@ -125,11 +125,11 @@ function createPostData() {
 
 
 function getUserInfo($user,$posts) {
-    $('.welcome').html(`hi, <i>${$user.username}</i>`);
+    $('.welcome').html(`hi, <i name='user'>${$user.username}</i>`);
     $('img[name=img]').attr('src',`${$user.img_url==''? "assets/postlist_default.jpg" : $user.img_url}`);
     $('#username').html(`${$user.username}`);
     $('#email').html(`${$user.email}`);
-    $('#loc').html(`${$user.location}`);
+    $('#location').html(`${$user.location}`);
     $('#join_date').html(`${$user.join_date}`);
     for (var i=0;i<$user.preference.length;i++) {
         var $pref= $user.preference[i];
@@ -222,12 +222,18 @@ function instantUpdateByID(field,target,oldTag) {
         $(this).replaceWith($(`<${oldTag} id='${field}'>${$text}</${oldTag}>`));
         if ($text.trim()==$initProfileVal.trim()) return;
         var dataObj={}; dataObj[field]= $text;
+        console.log(dataObj);
         $.ajax({
             'type': 'PATCH',
             'url': `/api/users/${$userid}`,
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
-            'success': function(output){ location.reload(); },
+            'success': function(output){ 
+                var key= Object.getOwnPropertyNames(output)[0];
+                if (key=='username') { $('i[name=user]').html(output[key]); } 
+                $(`#${key}`).html(output[key]);
+                //location.reload(); 
+            },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
     });
@@ -278,7 +284,7 @@ $(document).ready(function(){
 
     // instant update for username and location
     instantUpdateByID('username','div','span');
-    instantUpdateByID('loc','div','span');
+    instantUpdateByID('location','div','span');
     
     // edit preference
     $('button[name=edit_pref]').on('click',function(){

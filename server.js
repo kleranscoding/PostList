@@ -140,7 +140,8 @@ app.patch('/api/users/:user_id', (req,res)=>{
         {new: true},
         (err,updateOne)=> {
             if (err) { res.status(500).json({error:'internal error:',description: err}); }
-            res.json(updateOne);
+            //console.log(req.body);
+            res.json(req.body);
     });
 });
 
