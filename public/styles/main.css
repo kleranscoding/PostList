@@ -90,7 +90,7 @@ p[name=descrp-container] {
 }
 
 .post-snippet:hover {
-    background-color: rgba(153, 255, 246, 0.75);
+    background: linear-gradient(rgb(232, 255, 253),rgb(181, 222, 255));
     transform: scale(1.05);
 }
 

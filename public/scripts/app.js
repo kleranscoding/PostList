@@ -24,7 +24,7 @@ function getPosts() {
                   </div> 
                   <div class='row'>
                     <div class='col-md-4'>
-                      <img class='img-thumbnail' src='${post.images[0]}' />
+                      <img class='img-thumbnail' src='${post.images.length>0? post.images[0]: "assets/postlist_default.jpg"}' />
                     </div>  
                     <div class='col-md-8'>
                       <p class='text-truncate'>
@@ -78,10 +78,15 @@ $(document).ready(function(){
             'success': function(post) {
                 var $modalBody= $modal.find('.modal-body');
                 $modal.find('.modal-title').html(post.title);
-                post.images.forEach((img)=> {
+                if (post.images.length>0) {
+                    post.images.forEach((img)=> {
+                        $modalBody.find('[name=image-container]')
+                        .append(`<img class='img-responsive img-thumbnail' src='${img}'>`);
+                    });
+                } else {
                     $modalBody.find('[name=image-container]')
-                    .append(`<img class='img-responsive img-thumbnail' src='${img}'>`);
-                });
+                        .append(`<img class='img-responsive img-thumbnail' src='assets/postlist_default.jpg'>`);
+                }
                 var $categories= '';
                 post.categories.forEach((cat)=> {
                     $categories+= `<button class='btn btn-info' data-id='${cat._id}'>${cat.name}</button>`;

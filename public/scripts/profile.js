@@ -72,7 +72,7 @@ function getPosts(posts,target) {
             </div> 
             <div class='row'>
             <div class='col-md-4'>
-                <img class='img-thumbnail' src='${post.images[0]}' />
+                <img class='img-thumbnail' src='${post.images.length>0? post.images[0]: "assets/postlist_default.jpg"}' />
             </div>  
             <div class='col-md-8'>
                 <p class='text-truncate'>
@@ -87,6 +87,7 @@ function getPosts(posts,target) {
                 </div>
             </div>  
             </div>
+            <button name='delete_post' class='btn btn-danger'>&times;</button>
         </article>
         `);
     });
@@ -111,7 +112,8 @@ function createPostData() {
     var imgs= [];
     var $imgURLs= $createPost.find('.more_imgs').children();
     for (var i=0;i<$imgURLs.length;i++) {
-        imgs.push($imgURLs.eq(i).find('input').val());
+        var url= $imgURLs.eq(i).find('input').val();
+        if (url!='') imgs.push(url);
     }
     dataObj['images']= imgs;
     var today= new Date();
@@ -155,10 +157,15 @@ function populateViewModal(){
         'success': function(post) {
             var $modalBody= $modal.find('.modal-body');
             $modal.find('.modal-title').html(post.title);
-            post.images.forEach((img)=> {
+            if (post.images.length>0) {
+                post.images.forEach((img)=> {
+                    $modalBody.find('[name=image-container]')
+                    .append(`<img class='img-responsive img-thumbnail' src='${img}'>`);
+                });
+            } else {
                 $modalBody.find('[name=image-container]')
-                .append(`<img class='img-responsive img-thumbnail' src='${img}'>`)
-            });
+                    .append(`<img class='img-responsive img-thumbnail' src='assets/postlist_default.jpg'>`);
+            }
             var $categories= '';
             post.categories.forEach((cat)=> {
                 $categories+= `<button class='btn btn-info' data-id='${cat._id}'>${cat.name}</span>`;
