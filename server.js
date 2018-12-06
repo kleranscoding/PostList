@@ -137,8 +137,10 @@ app.patch('/api/users/:user_id', (req,res)=>{
     db.User.findOneAndUpdate(
         {'_id': req.params.user_id},
         {'$set': req.body},
-        {new: true},
-        (err,updateOne)=> {
+        {upsert: true},
+    ).populate('category').exec(
+        (err,updatedOne)=> {
+            console.log(updatedOne);
             if (err) { res.status(500).json({error:'internal error:',description: err}); }
             //console.log(req.body);
             res.json(req.body);

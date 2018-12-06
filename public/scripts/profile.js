@@ -123,6 +123,16 @@ function createPostData() {
     return dataObj;
 }
 
+function displayPreference(prefArray) {
+    $('div[name=display_pref]').html('');
+    for (var i=0;i<prefArray.length;i++) {
+        var $pref= prefArray[i];
+        $('div[name=display_pref]').append(`
+        <button data-id='${$pref._id}' class='btn btn-info'>${$pref.name}</button>
+        `);
+    }
+}
+
 
 function getUserInfo($user,$posts) {
     $('.welcome').html(`hi, <i name='user'>${$user.username}</i>`);
@@ -131,12 +141,7 @@ function getUserInfo($user,$posts) {
     $('#email').html(`${$user.email}`);
     $('#location').html(`${$user.location}`);
     $('#join_date').html(`${$user.join_date}`);
-    for (var i=0;i<$user.preference.length;i++) {
-        var $pref= $user.preference[i];
-        $('div[name=display_pref]').append(`
-        <button data-id='${$pref._id}' class='btn btn-info'>${$pref.name}</button>
-        `);
-    }
+    displayPreference($user.preference);
     getPosts($posts,'#user_posts');
     $('#modal-post-create p[name=email]').html(`${$user.email}`);
 }
@@ -342,7 +347,30 @@ $(document).ready(function(){
             'url': `/api/users/${$userid}`,
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
-            'success': function(output){ location.reload(); },
+            'success': function(output){ 
+                console.log(output);
+                ///*
+                console.log(output);
+                var key= Object.getOwnPropertyNames(output)[0];
+                var prefArray= [];
+                var updatedPref= output[key];
+                for (var i=0;i<updatedPref.length;i++) {
+                    for (var j=0;j<$categories.length;j++) {
+                        if (updatedPref[i]==$categories[j]._id) {
+                            prefArray.push({
+                                '_id': $categories[j]._id,
+                                 'name': $categories[j].name});
+                            break;
+                        }
+                    }
+                }
+                $('button[name=close_pref]').css('display','none');
+                $('button[name=save_pref]').css('display','none');
+                $('button[name=edit_pref]').css('display','inline-block');
+                displayPreference(prefArray);
+                //*/
+                //location.reload(); 
+            },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
 
@@ -405,7 +433,9 @@ $(document).ready(function(){
             'url': `/api/users/${$userid}/posts/${$postid}`,
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
-            'success': function(output){ location.reload(); },
+            'success': function(output){ 
+                location.reload(); 
+            },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
         
