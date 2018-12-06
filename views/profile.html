@@ -16,36 +16,52 @@
   <div class='container'>
     
     <div class='row'>
-      <div class='col-1'>
-        <h1 class='welcome'></h1>
+      <div class='col-md-12'>
+        <h2 class='welcome'></h2>
       </div>
     </div>
       
-      <div class='row'>
+      <div class='row' name='profile_header'>
         <div class='col-md-3'>
-          <img name='img' class='img-responsive' src='' alt='user'></a>
+          <img name='img' class='img-responsive' src='' alt='user'>
+          <button name='edit_prof_img' class='btn btn-primary'>
+            change profile image
+          </button>
         </div>
-        <div class='col-md-4'>
+        
+        <div name='basic_info' class='col-md-4'>
           
-            <!-- <label for='username'>username (edit)</label> -->
-            <h4 id='username'></h4>
-          
-            <!-- <label for='loc'>location (edit)</label> -->
-            <h4 id='loc'></h4>
+            <h4>
+                <span>username </span>
+                <span class='glyphicon glyphicon-pencil'></span>
+                <span id='username' ></p>  
+            </h4>
+     
+            <h4>
+                <span>location </span>
+                <span class='glyphicon glyphicon-pencil'></span>
+                <span id='loc' ></p>  
+            </h4>
+            
+            <h5> 
+              email: 
+              <span id='email'></span>
+            </h5>
 
-            <!-- <label for='join_date'>Join Date</label> -->
-            <h5 id='join_date'></h5>
+            <h5> 
+              join date: 
+              <span id='join_date'></span>
+            </h5>
 
-            <!-- <label for='email'>email</label> -->
-            <h5 id='email'></h5>
-          
         </div>
         <div class='col-md-3'>
           <div class='row preference'>
             <h3>
               <div class='row'>
-                Preference 
-                <button name='edit_pref' class='btn'>edit</button>
+                  Preference
+                <button name='edit_pref' class='btn'>
+                  <span class='glyphicon glyphicon-pencil'></span>
+                </button>
                 <button name='close_pref' class='btn' style='display:none'>close</button>
                 <button name='save_pref' class='btn btn-success' style='display:none'>save</button>
               </div>
@@ -53,6 +69,7 @@
             <div name='display_pref' class='col-md-12'></div>
           </div>
         </div>
+        
       </div>
       <h3>Your #PostList <button id='create_post' type='button' class='btn btn-success'>+ create post</button></h3>
       <div id='user_posts' class='container'></div>

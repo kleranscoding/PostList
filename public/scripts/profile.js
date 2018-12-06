@@ -65,11 +65,9 @@ function getPosts(posts,target) {
         } 
         $(target).append(
         `<article class='post-snippet' data-id='${post._id}'>
-            <div class='row'>
-            <div class='col-md-12'>
+            <div class='row'><div class='col-md-12'>
                 <h3>${post.title}</h3>
-            </div> 
-            </div> 
+            </div></div> 
             <div class='row'>
             <div class='col-md-4'>
                 <img class='img-thumbnail' src='${post.images.length>0? post.images[0]: "assets/postlist_default.jpg"}' />
@@ -272,8 +270,8 @@ $(document).ready(function(){
         });
     });
 
-    instantUpdateByID('username','div','h4');
-    instantUpdateByID('loc','div','h4');
+    instantUpdateByID('username','div','span');
+    instantUpdateByID('loc','div','span');
     
     // edit preference
     $('button[name=edit_pref]').on('click',function(){
@@ -320,7 +318,7 @@ $(document).ready(function(){
     // save preference
     $('button[name=save_pref]').on('click',function(){
         var $checked= $('input[type=checkbox]:checked');
-        if ($checked.length<1) return;
+        //if ($checked.length<1) return;
         
         var $selectedPref= [];
         for (var i=0;i<$checked.length;i++) { $selectedPref.push($checked.eq(i).val()); }
@@ -337,6 +335,7 @@ $(document).ready(function(){
 
     });
 
+    // edit post button
     $('button[name=edit_post]').on('click',function(){
         $('#modal-post').modal('toggle');
         $('#modal-post-edit').modal('toggle');
@@ -368,6 +367,7 @@ $(document).ready(function(){
         targetValByName($modalBodyEdit,'input','','contact_info',getTargetHTMLByName($modalBody,'p','span','contact-container'));
     });
 
+    // save post
     $('button[name=save_post]').on('click',function(){
         console.log('update');
         var $checked= $('div input[type=checkbox]:checked');
@@ -383,12 +383,9 @@ $(document).ready(function(){
         
         var $selectedCat= [];
         for (var i=0;i<$checked.length;i++) { $selectedCat.push($checked.eq(i).val()); }
-        var dataObj= {
-            'title': $title,
-            'description': $descrp,
-            'categories': $selectedCat,
-            'contact_info': $contactInfo
-        };
+        var dataObj= {};
+        dataObj['title']= $title; dataObj['description']= $descrp; 
+        dataObj['categories']= $selectedCat; dataObj['contact_info']= $contactInfo;
         
         $.ajax({
             'type': 'PATCH',

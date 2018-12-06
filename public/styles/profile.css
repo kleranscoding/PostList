@@ -1,11 +1,22 @@
 body {
     font-family: 'Rubik', sans-serif;
+    background: linear-gradient(rgba(242,246,248,1) 0%, rgba(216,225,231,1) 37%, rgba(181,198,208,1) 76%, rgba(224,239,249,1) 100%);
 }
 
 textarea {
     resize: none;
     width: 60%;
     height: 200px;
+}
+
+div[name=profile_header] {
+    background-color: rgb(224, 224, 224);
+    margin: 20px;
+    padding: 10px;
+}
+
+div[name=basic_info] {
+    text-align: left;
 }
 
 div[name=display_pref] span {
@@ -22,6 +33,7 @@ button[name=delete_post] {
 p[name=descrp-container] {
     text-align: left;
 }
+
 
 .alert {
     width: 60%;
@@ -47,6 +59,10 @@ p[name=descrp-container] {
     border: 1px solid black;
     margin: 5px;
 } */
+
+.welcome {
+    text-align: left;
+}
 
 .preference {
     margin-bottom: 20px;
