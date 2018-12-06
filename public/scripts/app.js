@@ -17,15 +17,27 @@ function getPosts() {
                 } 
                 $('#post_lists').append(`
                 <article class='post-snippet' data-id='${post._id}'>
-                  <h3>${post.title}</h3>
-                  <div class='wrapper'>
-                    <img src='${post.images[0]}' />
-                    <p class='text-truncate'>
-                      ${post.description.substring(0,descrpLen)}${dots}
-                      <span type='button' class='learn-more btn btn-info'>
-                        Learn More
-                      </span>
-                    </p>
+                  <div class='row'>
+                    <div class='col-md-12'>
+                      <h3>${post.title}</h3>
+                    </div> 
+                  </div> 
+                  <div class='row'>
+                    <div class='col-md-4'>
+                      <img class='img-thumbnail' src='${post.images[0]}' />
+                    </div>  
+                    <div class='col-md-8'>
+                      <p class='text-truncate'>
+                        ${post.description.substring(0,descrpLen)}${dots}
+                      </p>
+                      <div class='row'>
+                        <div class='col-md-2'>
+                          <span type='button' class='learn-more label label-info'>
+                            Learn More
+                          </span>
+                        </div>
+                      </div>
+                    </div>  
                   </div>
                 </article>
                 `);
@@ -37,14 +49,26 @@ function getPosts() {
     });
 }
 
+function targetHTMLByName(target,tag1,tag2,name,val) {
+    target.find(`${tag1}[name=${name}] ${tag2}`).html(val);
+}
+
+function clearViewModal() {
+    var $modal= $('#modal-post');
+    $modal.find('.modal-title').html('');
+    $modal.find('.modal-body').find('[name=image-container]').html('');
+    $modal.find('.modal-body').find('p[name=category-container]').html('');
+}
+
 
 $(document).ready(function(){
 
     getPosts();
     
     $('#post_lists').on('click','.learn-more',function(){
-        var $article= $(this).parent().parent().parent();
-        console.log($article.attr('data-id'));
+        var $article= $(this);
+        while ($article.prop('tagName')!='ARTICLE') { $article= $article.parent(); }
+        //console.log($article.attr('data-id'));
         var $modal= $('#modal-post');
         $modal.modal('toggle');
         // populate post
@@ -52,38 +76,29 @@ $(document).ready(function(){
             'method': 'GET',
             'url': `/api/posts/${$article.attr('data-id')}`,
             'success': function(post) {
-                console.log(post);
                 var $modalBody= $modal.find('.modal-body');
                 $modal.find('.modal-title').html(post.title);
                 post.images.forEach((img)=> {
-                    $modalBody.append(`<img src='${img}'>`)
+                    $modalBody.find('[name=image-container]')
+                    .append(`<img class='img-responsive img-thumbnail' src='${img}'>`);
                 });
                 var $categories= '';
                 post.categories.forEach((cat)=> {
-                    $categories+= `<span class='label label-info'>${cat.name}</span> `;
+                    $categories+= `<button class='btn btn-info' data-id='${cat._id}'>${cat.name}</button>`;
                 });
-                
-                $modalBody.append(`
-                <p>Categories: ${$categories} </p>
-                <p>Posted By: <span>${post.post_by.username}</span></p>
-                <p>Date: <span>${post.date_of_post}</span></p>
-                <p>Location: <span>${post.post_by.location}</span></p>
-                <p><section><h4>${post.description}</h4></section></p>
-                <p>Contact Info: <span>${post.contact_info}</span></p>
-                `);
-                //html($article.attr('data-id'));
+                $modalBody.find('p[name=category-container]').append($categories);
+                targetHTMLByName($modalBody,'p','span','post-by-container',post.post_by.username);
+                targetHTMLByName($modalBody,'p','span','date-container',post.date_of_post);
+                targetHTMLByName($modalBody,'p','span','location-container',post.post_by.location);
+                targetHTMLByName($modalBody,'p','span','descrp-container',`${post.description}`);
+                targetHTMLByName($modalBody,'p','span','contact-container',post.contact_info);
             },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
         
     });
 
-    $('#modal-post button').on('click',function(){
-        var $modal= $('#modal-post');
-        var $modalBody= $modal.find('.modal-body');
-        $modal.find('.modal-title').html('');
-        $modalBody.html('');
-    });
+    $('#modal-post button[data-dismiss=modal]').on('click',clearViewModal);
 
 });
 

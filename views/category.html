@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>PostList | Category</title>
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
     <link rel='stylesheet' href='styles/main.css'>
     <link rel='stylesheet' href='styles/category.css'>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
@@ -20,8 +21,8 @@
             <ul class='nav navbar-nav'>
               <li class='active'><a href='/'>Home</a></li>
               <li><a href='/category'>Search</a></li>
-              <li><a href=''>Login</a></li>
-              <li><a href=''>Register</a></li>
+              <li><a href='/login'>Login</a></li>
+              <li><a href='/register'>Register</a></li>
             </ul>
           </nav>
         </header>
@@ -37,18 +38,43 @@
     
     <div id='show_posts'></div>
 
+    <!-- display post with modal -->
     <article class='modal fade' id='modal-post' tabindex='-1' role='dialog'>
       <div class='modal-dialog' role='document'>
         <div class='modal-content'>
           <div class='modal-header'>
-            <h2 class='modal-title'></h2>
             <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
               <span aria-hidden='true'>&times;</span>
             </button>
+            <h2 class='modal-title' name='title'></h2>
           </div>
-          <div class='modal-body'></div>
+          <div class='modal-body'>
+            <div class='row'>
+              <div class='col-md-6'>
+                <div name='image-container'></div>
+              </div>
+              <div class='col-md-6'>
+                <p name='category-container'>
+                </p>
+                <p name='post-by-container'>
+                  Post By: <span></span>
+                </p>
+                <p name='date-container'>
+                  Date: <span></span> 
+                </p>
+                <p name='descrp-container'>
+                  <span></span>
+                </p>
+              </div> 
+            </div>    
+            <hr>
+            <p class='mb-0' name='contact-container'>
+              Contact Info: <span></span> 
+            </p>    
+          </div> 
+
           <div class='modal-footer'>
-            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+            <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
           </div>
         </div>
       </div>
