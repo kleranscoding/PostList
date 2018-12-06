@@ -13,10 +13,13 @@ body {
     border:none!important;
 }
 
+.login-alert {
+    display: none;
+}
+
 .well.login-box {
     width:300px;
     margin:0 auto;
-    display:none;
 }
 .well.login-box legend {
   font-size:26px;

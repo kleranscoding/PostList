@@ -21,7 +21,7 @@ app.use(express.static(__dirname+'/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-/////***** ===== VIEWS ===== *****/////
+/////***** ===== ROUTES ===== *****/////
 
 /**
  * Home/Root
@@ -30,14 +30,28 @@ app.get('/',(req, res)=> {
     res.sendFile(__dirname+'/views/index.html');
 });
 
+app.get('/home',(req, res)=> {
+    res.sendFile(__dirname+'/views/index.html');
+});
+
+app.get('/index',(req, res)=> {
+    res.sendFile(__dirname+'/views/index.html');
+});
+
 app.get('/category',(req, res)=> {
     res.sendFile(__dirname+'/views/category.html');
 });
 
+app.get('/login',(req, res)=> {
+    res.sendFile(__dirname+'/views/login.html');
+});
+
+///*
 app.get('/profile',(req, res)=> {
     res.sendFile(__dirname+'/views/profile.html');
     //res.sendFile(__dirname+'/views/profile.html?id='+req.params.userid);
 });
+//*/
 
 app.get('/profile/:userid',(req, res)=> {
     res.redirect('/profile?userid='+req.params.userid);
@@ -179,7 +193,7 @@ app.put('/api/users/:user_id/posts/:post_id', ctrl.post.update);
 
 // update an existing post by post_id from user_id (PATCH)
 app.patch('/api/users/:user_id/posts/:post_id', (req,res)=>{
-    console.log(req.body);
+    //console.log(req.body);
     db.Post.findOneAndUpdate(
         {'_id': req.params.post_id, 'post_by': req.params.user_id},
         {'$set': req.body},
@@ -194,6 +208,23 @@ app.patch('/api/users/:user_id/posts/:post_id', (req,res)=>{
 
 // delete an existing post by post_id from user_id
 app.delete('/api/users/:user_id/posts/:post_id', ctrl.post.delete);
+
+
+/**
+ * SEARCH
+ */
+
+// get all users
+app.get('/api/search/users', (req,res)=> {
+    console.log(req.query);
+    //return;
+    db.User.find(req.query)
+    .exec((err,foundUser)=> {
+        if (err) { res.status(500).json({error:'internal error:',description: err}); }
+        console.log(foundUser);
+        res.json(foundUser);
+    });
+});
 
 
 
