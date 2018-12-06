@@ -127,8 +127,8 @@ function createPostData() {
 
 
 function getUserInfo($user,$posts) {
-    //$('img[name=img]').src(`${$user.img_url}`);
     $('.welcome').html(`Welcome, <i>${$user.username}</i>`);
+    $('img[name=img]').attr('src',`${$user.img_url==''? "assets/postlist_default.jpg" : $user.img_url}`);
     $('#username').html(`${$user.username}`);
     $('#email').html(`${$user.email}`);
     $('#loc').html(`${$user.location}`);
