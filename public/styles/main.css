@@ -65,6 +65,10 @@ div [name=image-container] {
     overflow-y: scroll;
 }
 
+p[name=descrp-container] {
+    white-space: pre-wrap;
+}
+
 
 .navbar-brand {
     width: 200px;

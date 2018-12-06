@@ -28,7 +28,7 @@ p[name=descrp-container] {
     margin: 5px 20%;
 }
 
-.col-1 { 
+/* .col-1 { 
     height : 20vh;
     text-align: center;
     padding: 10px;   
@@ -46,7 +46,7 @@ p[name=descrp-container] {
     border-radius: 5px;
     border: 1px solid black;
     margin: 5px;
-}
+} */
 
 .preference {
     margin-bottom: 20px;

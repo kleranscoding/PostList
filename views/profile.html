@@ -13,23 +13,32 @@
   </head>
   <body>
 
-    <div class='container'>
-    <!-- Stack the columns on mobile by making one full-width and the other half-width -->
-      <div class='row'>
-        <div class='col-1'>
-          <h1 class='welcome'></h1>
-        </div>
+  <div class='container'>
+    
+    <div class='row'>
+      <div class='col-1'>
+        <h1 class='welcome'></h1>
       </div>
-      <!-- Columns are always 50% wide, on mobile and desktop -->
+    </div>
+      
       <div class='row'>
-        <div class='col-md-4'>
+        <div class='col-md-3'>
           <img name='img' src='' alt='user'></a>
         </div>
         <div class='col-md-4'>
-          <h3 name='username'></h3>
-          <h3 name='email'></h3>
-          <h3 name='location'></h3>
-          <h3 name='join_date'></h3>
+          
+            <!-- <label for='username'>username (edit)</label> -->
+            <h3 id='username'></h3>
+          
+            <!-- <label for='email'>email</label> -->
+            <h3 id='email'></h3>
+          
+            <!-- <label for='loc'>location (edit)</label> -->
+            <h3 id='loc'></h3>
+         
+            <!-- <label for='join_date'>Join Date</label> -->
+            <h3 id='join_date'></h3>
+          
         </div>
         <div class='col-md-3'>
           <div class='row preference'>
@@ -60,30 +69,32 @@
             <h2 class='modal-title' name='title'></h2>
           </div>
           <div class='modal-body'>
-            <div name='image-container'></div>
-            <div class='alert'>
-              <p>Category:</p> 
-              <p name='category-container'>
-              </p>
-              <p name='post-by-container'>
-                Post By: <span></span>
-              </p>
-              <p name='date-container'>
-                Date: <span></span> 
-              </p>
-            </div>
-            <div class='alert'>
-              <p name='descrp-container'>
-                <span></span>
-              </p>
-              <hr>
-              <p class='mb-0' name='contact-container'>
-                Contact Info: <span></span> 
-              </p>
-            </div>
+            <div class='row'>
+              <div class='col-md-6'>
+                <div name='image-container'></div>
+              </div>
+              <div class='col-md-6'>
+                <p name='category-container'>
+                </p>
+                <p name='post-by-container'>
+                  Post By: <span></span>
+                </p>
+                <p name='date-container'>
+                  Date: <span></span> 
+                </p>
+                <p name='descrp-container'>
+                  <span></span>
+                </p>
+              </div> 
+            </div>    
+            <hr>
+            <p class='mb-0' name='contact-container'>
+              Contact Info: <span></span> 
+            </p>    
           </div> 
+
           <div class='modal-footer'>
-            <button type='button' name='edit_post' class='btn btn-success'>Edit</button>
+              <button type='button' name='edit_post' class='btn btn-success'>Edit</button>
             <button type='button' name='close' class='btn btn-secondary' data-dismiss='modal'>Close</button>
           </div>
         </div>

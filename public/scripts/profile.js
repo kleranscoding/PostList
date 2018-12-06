@@ -44,17 +44,28 @@ function getPosts(posts,target) {
         } 
         $(target).append(`
         <article class='post-snippet' data-id='${post._id}'>
-          <h3>${post.title}</h3>
-          <div class='wrapper'>
-            <img src='${post.images[0]}'/>
-            <p class='text-truncate'>
-              ${post.description.substring(0,descrpLen)}${dots}
-              <span type='button' class='learn-more btn btn-info'>
-                Learn More
-              </span>
-            </p>
-          </div>
-          <button name='delete_post' class='btn btn-danger'>&times;</button>
+            <div class='row'>
+            <div class='col-md-12'>
+                <h3>${post.title}</h3>
+            </div> 
+            </div> 
+            <div class='row'>
+            <div class='col-md-4'>
+                <img class='img-thumbnail' src='${post.images[0]}' />
+            </div>  
+            <div class='col-md-8'>
+                <p class='text-truncate'>
+                ${post.description.substring(0,descrpLen)}${dots}
+                </p>
+                <div class='row'>
+                <div class='col-md-2'>
+                    <span type='button' class='learn-more label label-info'>
+                    Learn More
+                    </span>
+                </div>
+                </div>
+            </div>  
+            </div>
         </article>
         `);
     });
@@ -95,14 +106,14 @@ function createPostData() {
 function getUserInfo($user,$posts) {
     //$('img[name=img]').src(`${$user.img_url}`);
     $('.welcome').html(`Welcome, <i>${$user.username}</i>`);
-    $('[name=username]').html(`${$user.username}`);
-    $('[name=email]').html(`${$user.email}`);
-    $('[name=location]').html(`${$user.location}`);
-    $('[name=join_date]').html(`${$user.join_date}`);
+    $('#username').html(`${$user.username}`);
+    $('#email').html(`${$user.email}`);
+    $('#loc').html(`${$user.location}`);
+    $('#join_date').html(`${$user.join_date}`);
     for (var i=0;i<$user.preference.length;i++) {
         var $pref= $user.preference[i];
         $('div[name=display_pref]').append(`
-        <span name='pref${i+1}' data-id='${$pref._id}' class='label label-info'>${$pref.name}</span>
+        <button data-id='${$pref._id}' class='btn btn-info'>${$pref.name}</button>
         `);
     }
     getPosts($posts,'#user_posts');
@@ -126,7 +137,8 @@ function getTargetValByName(target,tag1,tag2,name) {
 }
 
 function populateViewModal(){
-    var $article= $(this).parent().parent().parent();
+    var $article= $(this);
+    while ($article.prop('tagName')!='ARTICLE') { $article= $article.parent(); }
     $postid= $article.attr('data-id');
     var $modal= $('#modal-post');
     $modal.modal('toggle');
@@ -138,11 +150,12 @@ function populateViewModal(){
             var $modalBody= $modal.find('.modal-body');
             $modal.find('.modal-title').html(post.title);
             post.images.forEach((img)=> {
-                $modalBody.find('[name=image-container]').append(`<img src='${img}'>`)
+                $modalBody.find('[name=image-container]')
+                .append(`<img class='img-responsive img-thumbnail' src='${img}'>`)
             });
             var $categories= '';
             post.categories.forEach((cat)=> {
-                $categories+= `<span class='label label-info' data-id='${cat._id}'>${cat.name}</span>`;
+                $categories+= `<button class='btn btn-info' data-id='${cat._id}'>${cat.name}</span>`;
             });
             $modalBody.find('p[name=category-container]').append($categories);
             targetHTMLByName($modalBody,'p','span','post-by-container',post.post_by.username);
@@ -195,16 +208,16 @@ function createNewPost() {
 
 function instantUpdateByField(field,target,oldTag) {
     // click on area to change
-    $(target).on('click',`${oldTag}[name=${field}]`,function(){
+    $(target).on('click',`${oldTag}[id=${field}]`,function(){
         $initProfileVal= $(this).html();
-        $(this).replaceWith($(`<input name='${field}' value='${$(this).html()}' required>`));
-        $(`${target} input[name=${field}]`).focus();
+        $(this).replaceWith($(`<input id='${field}' value='${$(this).html()}' required>`));
+        $(`${target} input[id=${field}]`).focus();
     });
 
-    $(target).on('blur',`input[name=${field}]`,function(){
+    $(target).on('blur',`input[id=${field}]`,function(){
         var $text= $(this).val();
         if ($text=='') return;
-        $(this).replaceWith($(`<${oldTag} name='${field}'>${$text}</${oldTag}>`));
+        $(this).replaceWith($(`<${oldTag} id='${field}'>${$text}</${oldTag}>`));
         if ($text==$initProfileVal) return;
         var dataObj={}; dataObj[field]= $text;
         $.ajax({
@@ -267,13 +280,24 @@ $(document).ready(function(){
 
         $('div[name=display_pref]').html('');
         for (var i=0;i<$prefs.length;i++) {
-            $('div[name=display_pref]').append(`
-            <input type='checkbox' value='${$prefs.eq(i).attr('data-id')}' checked>${$prefs.eq(i).html()}`);
+            $('div[name=display_pref]')
+            .append(
+            `<label class='form-check-label'>
+               <input type='checkbox' class='form-check-input' value='${$prefs.eq(i).attr('data-id')}' checked>
+               ${$prefs.eq(i).html()}
+             </label>
+             `);
         }
         for (var i=0;i<$categories.length;i++) {
             var cat= $categories[i];
             if ($('div[name=display_pref]').find(`input[value=${cat._id}]`).length>0) continue;
-            $('div[name=display_pref]').append(`<input type='checkbox' value='${cat._id}'>${cat.name}`);
+            $('div[name=display_pref]')
+            .append(
+            `<label class='form-check-label'>
+               <input type='checkbox' class='form-check-input' value='${cat._id}'>
+               ${cat.name}
+             </label>  
+            `);
         }
     });
 
@@ -314,17 +338,26 @@ $(document).ready(function(){
         $('#modal-post-edit').modal('toggle');
         var $modalBodyEdit= $('#modal-post-edit .modal-body');
         var $modalBody= $('#modal-post .modal-body');
-        var $postCategories= $modalBody.find('p[name=category-container] span');
+        var $postCategories= $modalBody.find('p[name=category-container] button');
         $('div[name=display_cat]').html('');
         for (var i=0;i<$postCategories.length;i++) {
-            $('div[name=display_cat]').append(`
-            <input type='checkbox' value='${$postCategories.eq(i).attr('data-id')}' checked>${$postCategories.eq(i).html()}
+            $('div[name=display_cat]').append(
+            `<label class='form-check-label'>
+               <input type='checkbox' class='form-check-input' value='${$postCategories.eq(i).attr('data-id')}' checked>
+               ${$postCategories.eq(i).html()}
+             </label>  
             `);
         }
         for (var i=0;i<$categories.length;i++) {
             var cat= $categories[i];
             if ($('div[name=display_cat]').find(`input[value=${cat._id}]`).length>0) continue;
-            $('div[name=display_cat]').append(`<input type='checkbox' value='${cat._id}'>${cat.name}`);
+            $('div[name=display_cat]')
+            .append(
+            `<label class='form-check-label'>
+               <input type='checkbox' class='form-check-input' value='${cat._id}'>
+               ${cat.name}
+             </label>  
+            `);
         }
         targetValByName($('#modal-post-edit'),'input','','title',getTargetHTMLByName($('#modal-post'),'h2','','title'));
         targetValByName($modalBodyEdit,'textarea','','descrp',getTargetHTMLByName($modalBody,'p','span','descrp-container'));
