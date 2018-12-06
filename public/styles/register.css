@@ -1,0 +1,32 @@
+
+body {
+  font-family: 'Rubik', sans-serif;
+  text-align: left;
+  padding-bottom: 50px;
+}
+
+label {
+  margin: 5px;
+}
+
+.col-md-12, .form-check {
+  text-align: center;
+}
+
+.col-md-12 {
+  padding: 20px;
+}
+
+.btn {
+  float: right;
+  margin: 10px;
+}
+
+.form-check h4 {
+  margin: 20px;
+}
+
+.row {
+  padding: 5px;
+}
+

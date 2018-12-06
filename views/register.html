@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>PostList | Register</title>
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
+    <link rel='stylesheet' href='styles/main.css'>
+    <link rel='stylesheet' href='styles/register.css'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src='scripts/register.js' defer></script>
+  </head>
+  
+  <body>
+    <div class='container'>
+      
+      <div class='row'>
+        <div class='col-md-12'>
+          <h2>Create an account</h2>
+        </div>
+      </div>
+
+      <div class='row'>
+        <div class='col-md-6'>
+          <div class='col-md-12'>
+            <h3>-- Basic Login Info --</h2>
+          </div>
+
+          <div class='col-md-10'>
+            <div class='form-group'>
+              <label for='username'>Username (required)</label>
+              <input type='text' class='form-control' id='username' placeholder='username'>
+            </div>
+      
+            <div class='form-group'>
+              <label for='email'>Email address (required)</label>
+              <input type='email' class='form-control' id='email' aria-describedby='emailHelp' placeholder='Enter email'>
+              <small id='emailHelp' class='form-text text-muted'>
+                <i>We will never share your email with anyone</i>
+              </small>
+            </div>
+      
+            <div class='form-group'>
+              <label for='password'>Password (required)</label>
+              <input type='password' class='form-control' id='password' placeholder='Password'>
+            </div>
+      
+            <div class='form-group'>
+              <label for='confirm_password'>Confirm Password (required)</label>
+              <input type='password' class='form-control' id='confirm_password' placeholder='Confirm Password'>
+            </div>
+
+          </div> 
+        </div>
+
+        <div class='col-md-6'>
+          <div class='col-md-12'>
+            <h3>-- More about you --</h2>
+          </div>
+
+          <div class='col-md-10'>
+            <div class='form-group'>
+              <label for='loc'>Currently Residing (required)</label>
+              <input type='text' class='form-control' id='loc' placeholder='Location'>
+            </div>
+            <div class='form-group'>
+              <label for='img_url'>Profile Image</label>
+              <input type='text' class='form-control' id='img_url' placeholder='Profile Image URL'>
+            </div>
+
+            <div class='form-check'>
+              <h4>Select from below that may interest you</h4>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+ 
+      <div class='row'>
+        <div class='col-md-12'>
+          <button type='submit' id='create' class='btn btn-success'>Create</button>
+          <button type='submit' id='cancel' class='btn btn-primary'>Cancel</button>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+</html>

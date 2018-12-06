@@ -46,6 +46,10 @@ app.get('/login',(req, res)=> {
     res.sendFile(__dirname+'/views/login.html');
 });
 
+app.get('/register',(req, res)=> {
+    res.sendFile(__dirname+'/views/register.html');
+});
+
 ///*
 app.get('/profile',(req, res)=> {
     res.sendFile(__dirname+'/views/profile.html');
@@ -56,8 +60,6 @@ app.get('/profile',(req, res)=> {
 app.get('/profile/:userid',(req, res)=> {
     res.redirect('/profile?userid='+req.params.userid);
 });
-
-//app.get('/users/:userid');
 
 /**
  * API home
@@ -125,18 +127,6 @@ app.get('/api/users/:user_id', ctrl.user.show);
 app.post('/api/users', ctrl.user.create);
 
 /*== PUT ==*/
-
-// app.get('/something', (req,res) => {
-//     var arr= [];
-//     req.body.preference.forEach((pref) => {
-//         db.Category.findOne({'name': pref},(err1,foundCat)=> {
-//             console.log(`foundcat ${foundCat._id}`);
-//             if (err1) { return console.log(err1); }
-//             arr.push(foundCat);
-//         });
-//     });
-//     if (arr!=null) res.json(arr);
-// })
 
 // update user info
 app.put('/api/users/:user_id', ctrl.user.update);
