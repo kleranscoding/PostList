@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/create.css">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
-    
+
   </head>
   <body>
 
@@ -18,23 +18,43 @@
 <div class="row">
   <div class="col-xs-6 col-md-4"><br>
    <input type="text" class="form-control" name="title" placeholder="Username"><br>
+   <input type="text" class="form-control" name="title" placeholder="email"><br>
+   <input type="text" class="form-control" name="title" placeholder="password"><br>
    <input type="text" class="form-control" name="title" placeholder="Location"><br>
    <input type="text" class="form-control" name="title" placeholder="Url example: www.allaboutme.com etc."><br>
+
   </div>
-  <div class="col-xs-6 col-md-4"> <br><p>*required*</p> </div>
+
 </div>
 
 <!-- Columns are always 50% wide, on mobile and desktop -->
 <div class="row">
-<div class="col-1"><h3>Choose Preferences:</h3></div></div>
-  <div class="row">
-  <div class="col-xs-6 col-md-4"><input type="text" class="form-control" name="title" placeholder="Pref#1"></div>
-  <div class="col-xs-6 col-md-4"><input type="text" class="form-control" name="title" placeholder="Pref#2"></div>
-  <div class="col-xs-6 col-md-4"><input type="text" class="form-control" name="title" placeholder="+ additional Preferences"></div>
+<div class="col-1"><h1>Choose Preferences:</h1></div></div>
+<div class="row"><div class="pretty p-default">
+  <div class="col-xs-6 col-sm-3"></div>
+  <div class="col-xs-6 col-sm-3"><input type="checkbox" />
+  <div class="state">
+      <label>Check</label></div></div>
+
+  <!-- Add the extra clearfix for only the required viewport -->
+  <div class="clearfix visible-xs-block"></div>
+
+  <div class="col-xs-6 col-sm-3"><input type="checkbox" />
+  <div class="state">
+      <label>Check</label></div></div>
+  <div class="col-xs-6 col-sm-3"><input type="checkbox" />
+  <div class="state">
+      <label>Check</label></div>
 </div>
 
-<button type="submit" class="btn btn-cancel" >Cancel</button>
-<button type="submit" class="btn btn-create"><a href="/profile">Create</a></button>
+
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-8"></div>
+      <div class="col-xs-6 col-md-4"><button type="submit" class="btn btn-cancel" >Cancel</button>
+      <button type="submit" class="btn btn-create"><a href="">Create</a></button></div>
+    </div>
+
   <script src='scripts/app.js' defer></script>
       </div>
   </body>

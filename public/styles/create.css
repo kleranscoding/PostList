@@ -1,46 +1,20 @@
-div {
-
-}
-
+@import url('https://fonts.googleapis.com/css?family=Rubik');
 body {
+  background-image:linear-gradient(90deg, #649cfc, #ff2d6c);
+  margin:auto;
+}
+#body {
+  margin:auto;
+  border-style: solid;
+border-color: #f79731;
+  width: 35%;
+  padding: 5% 5% 5% 5%;
+  background-color: rgba(209, 206, 192, 0.4);
+  font-family: sans-serif, monospace;
+  text-align: left;
+}
+h1 {
   font-family: 'Rubik', sans-serif;
-}
-
-.col-xs-6 {
-height: 28vh;
-display: block;
-}
-
-img {
- height: 49vh;
- border-radius: 89px;
- float: right;
-}
-
-.col-1 {
- height : 12vh;
- text-align: center;
- padding: 20px;
-
-}
-
-button,
-.btn-Create {
-  background-color: green;
-}
-
-button,
-.btn-Cancel
-{
-  background-color: red;
-  float: right;
-}
-
-.row {
-  padding: 25px;
-}
-
-h3 {
-  font-size: 24px;
-  padding: 12px;
+  font-size: 250%;
+  text-align: center;
 }
