@@ -3,6 +3,24 @@ console.log('sanity check...');
 const maxLen= 150;
 var $categories, $userid, $prefs, $initProfileVal, $postid;
 
+
+
+function targetValByName(target,tag1,tag2,name,val) {
+    target.find(`${tag1}[name=${name}] ${tag2}`).val(val);
+}
+
+function targetHTMLByName(target,tag1,tag2,name,val) {
+    target.find(`${tag1}[name=${name}] ${tag2}`).html(val);
+}
+
+function getTargetHTMLByName(target,tag1,tag2,name) {
+    return target.find(`${tag1}[name=${name}] ${tag2}`).html();
+}
+
+function getTargetValByName(target,tag1,tag2,name) {
+    return target.find(`${tag1}[name=${name}] ${tag2}`).val();
+}
+
 function getCategory() {
     $.ajax({
         'method': 'GET',
@@ -10,8 +28,11 @@ function getCategory() {
         'success': function(categories) {
             $categories= categories;
             categories.forEach((cat)=> {
-                $('select[name=cat1]').append(`
-                <option value=${cat._id}>${cat.name}</option>
+                $('.more_categories').append(
+                `<label class='form-check-label'>
+                   <input type='checkbox' class='form-check-input' value='${cat._id}'>
+                   ${cat.name}
+                 </label>
                 `);
             });
             $('select[name=pref1]').children().eq(0).attr('selected','selected');
@@ -42,8 +63,8 @@ function getPosts(posts,target) {
             descrpLen= maxLen;
             dots= '...';
         } 
-        $(target).append(`
-        <article class='post-snippet' data-id='${post._id}'>
+        $(target).append(
+        `<article class='post-snippet' data-id='${post._id}'>
             <div class='row'>
             <div class='col-md-12'>
                 <h3>${post.title}</h3>
@@ -75,16 +96,16 @@ function createPostData() {
     var $createPost= $('#modal-post-create');
     var dataObj= {};
     dataObj['title']= $createPost.find('input[name=title]').val();
-    if (dataObj['title']=='') return {};
+    if (dataObj['title']=='') return null;
     dataObj['description']= $createPost.find('textarea[name=description]').val();
-    if (dataObj['description']=='') return {};
+    if (dataObj['description']=='') return null;
     dataObj['contact_info']= $createPost.find('p[name=email]').html();
     // get categories
     var category= [];
-    var $selectedCat= $createPost.find('.more_categories').children();
-    for (var i=0;i<$selectedCat.length;i++) {
-        category.push($selectedCat.eq(i).find('option:selected').val());
-    }
+    var $checkedCat= $('#modal-post-create input[type=checkbox]:checked');
+    //console.log($checkedCat);
+    if ($checkedCat.length==0) return null;
+    for (var i=0;i<$checkedCat.length;i++) { category.push($checkedCat.eq(i).val()); }
     dataObj['categories']= category;
     // get images
     var imgs= [];
@@ -120,21 +141,6 @@ function getUserInfo($user,$posts) {
     $('#modal-post-create p[name=email]').html(`${$user.email}`);
 }
 
-function targetValByName(target,tag1,tag2,name,val) {
-    target.find(`${tag1}[name=${name}] ${tag2}`).val(val);
-}
-
-function targetHTMLByName(target,tag1,tag2,name,val) {
-    target.find(`${tag1}[name=${name}] ${tag2}`).html(val);
-}
-
-function getTargetHTMLByName(target,tag1,tag2,name) {
-    return target.find(`${tag1}[name=${name}] ${tag2}`).html();
-}
-
-function getTargetValByName(target,tag1,tag2,name) {
-    return target.find(`${tag1}[name=${name}] ${tag2}`).val();
-}
 
 function populateViewModal(){
     var $article= $(this);
@@ -177,18 +183,10 @@ function clearViewModal() {
     //$modalBody= $modal.find('.modal-body').html('');
 }
 
-function clearEditModal() {
-    var $modal= $('#modal-post-edit');
-    $modal.find('.modal-title').html('');
-    console.log($('#modal-post-edit').find('div[name=display_cat]'));
-    $modal.find('.modal-body').find('[name=image-container]').html('');
-    $modal.find('.modal-body').find('div[name=category-container] span').html('');
-}
-
 function createNewPost() {
     var dataObj= createPostData();
-    //console.log(dataObj);
-    if (dataObj=={}) return;
+    //console.log(dataObj); console.log(dataObj==null);return;
+    if (dataObj==null) return;
     ///*
     $.ajax({
         'method': 'POST',
@@ -205,8 +203,7 @@ function createNewPost() {
     //*/
 }
 
-
-function instantUpdateByField(field,target,oldTag) {
+function instantUpdateByID(field,target,oldTag) {
     // click on area to change
     $(target).on('click',`${oldTag}[id=${field}]`,function(){
         $initProfileVal= $(this).html();
@@ -218,7 +215,7 @@ function instantUpdateByField(field,target,oldTag) {
         var $text= $(this).val();
         if ($text=='') return;
         $(this).replaceWith($(`<${oldTag} id='${field}'>${$text}</${oldTag}>`));
-        if ($text==$initProfileVal) return;
+        if ($text.trim()==$initProfileVal.trim()) return;
         var dataObj={}; dataObj[field]= $text;
         $.ajax({
             'type': 'PATCH',
@@ -268,8 +265,8 @@ $(document).ready(function(){
         });
     });
 
-    instantUpdateByField('username','div','h3');
-    instantUpdateByField('location','div','h3');
+    instantUpdateByID('username','div','h4');
+    instantUpdateByID('loc','div','h4');
     
     // edit preference
     $('button[name=edit_pref]').on('click',function(){
