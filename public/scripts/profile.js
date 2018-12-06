@@ -125,7 +125,7 @@ function createPostData() {
 
 
 function getUserInfo($user,$posts) {
-    $('.welcome').html(`Welcome, <i>${$user.username}</i>`);
+    $('.welcome').html(`hi, <i>${$user.username}</i>`);
     $('img[name=img]').attr('src',`${$user.img_url==''? "assets/postlist_default.jpg" : $user.img_url}`);
     $('#username').html(`${$user.username}`);
     $('#email').html(`${$user.email}`);
@@ -240,6 +240,7 @@ $(document).ready(function(){
 
     startProfilePage();
     
+    // creating new post template
     $('#create_post').on('click', function(){
         $('#modal-post-create').modal('toggle');
         $('#more_img_url').on('click', function(){
@@ -247,8 +248,10 @@ $(document).ready(function(){
         });
     });
 
+    // close post view
     $('#modal-post button[data-dismiss=modal]').on('click',clearViewModal);
 
+    // cancel edit post
     $('#modal-post-edit button[name=cancel]').on('click',function(){
         $('#modal-post-edit').modal('toggle');
         $('#modal-post').modal('toggle');
@@ -256,10 +259,13 @@ $(document).ready(function(){
         $('#modal-post-edit').find('div[name=display_cat]').html('');
     });
     
+    // learn more
     $('#user_posts').on('click','.learn-more',populateViewModal);
 
+    // create new post
     $('button[name=create_post]').on('click',createNewPost);
 
+    // delete post
     $('#user_posts').on('click','button[name=delete_post]',function(){
         var $post_id= $(this).parent().attr('data-id');
         $.ajax({
@@ -270,6 +276,7 @@ $(document).ready(function(){
         });
     });
 
+    // instant update for username and location
     instantUpdateByID('username','div','span');
     instantUpdateByID('loc','div','span');
     

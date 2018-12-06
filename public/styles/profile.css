@@ -3,6 +3,10 @@ body {
     background: linear-gradient(rgba(242,246,248,1) 0%, rgba(216,225,231,1) 37%, rgba(181,198,208,1) 76%, rgba(224,239,249,1) 100%);
 }
 
+img[name=img] {
+    margin: 15px;
+}
+
 textarea {
     resize: none;
     width: 60%;
@@ -13,15 +17,21 @@ div[name=profile_header] {
     background-color: rgb(224, 224, 224);
     margin: 20px;
     padding: 10px;
+    border-radius: 10px;
 }
 
 div[name=basic_info] {
     text-align: left;
+    margin: 15px;
 }
 
 div[name=display_pref] span {
     margin: 5px;
     font-size: 1.25rem;
+}
+
+div[name=image-container] {
+    margin: 15px;
 }
 
 button[name=delete_post] {
