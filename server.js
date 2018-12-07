@@ -30,6 +30,26 @@ app.get('/',(req, res)=> {
     res.sendFile(__dirname+'/views/index.html');
 });
 
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname+'/views/login.html');
+});
+
+app.get('/create', (req, res) => {
+    res.sendFile(__dirname+'/views/create.html');
+});
+
+app.get('/profile', (req, res) => {
+    res.sendFile(__dirname+'/views/profile.html');
+});
+
+app.get('/view', (req, res) => {
+    res.sendFile(__dirname+'/views/view.html');
+});
+
+app.get('/feedback', (req,res) => {
+  res.sendFile(__dirname+'/views/feedback.html')
+})
+
 /**
  * API home
  */
