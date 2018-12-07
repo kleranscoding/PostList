@@ -6,12 +6,13 @@
 /////***** ===== VARIABLES ===== *****/////
 
 const portNum= 8000;
+const NOT_FOUND_ERR= 404, FORBIDDEN_ERR=403, OK=200, INTERNAL_ERR=500;
 const express= require('express');
 const app= express();
 const bodyParser= require('body-parser');
+const cookieParser= require('cookie-parser');
 const db= require('./models');
 const ctrl = require('./controllers');
-
 
 
 /////***** ===== MIDDLEWARE ===== *****/////
@@ -19,6 +20,7 @@ const ctrl = require('./controllers');
 app.use(express.json());
 app.use(express.static(__dirname+'/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
 /////***** ===== ROUTES ===== *****/////
@@ -26,15 +28,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /**
  * Home/Root
  */
+
+ /*
+ app.use('/',(req,res,next)=>{
+    //get cookies data 
+    // check if that cookeis is undefined
+    // if defined get user data and set to locals variable
+    // if undefined set userdata in locals null or anything
+    res.cookie('name', 'express').send('cookie set');
+    next();
+});
+//*/
+
+app.use('/',(req,res,next)=>{
+    //const data = req.cookies.userInfo;
+    //console.log(data);
+
+    next();
+});
+
 app.get('/',(req, res)=> {
+    //res.locals.erewui
     res.sendFile(__dirname+'/views/index.html');
 });
 
 app.get('/home',(req, res)=> {
-    res.sendFile(__dirname+'/views/index.html');
-});
-
-app.get('/index',(req, res)=> {
     res.sendFile(__dirname+'/views/index.html');
 });
 
@@ -43,19 +61,91 @@ app.get('/category',(req, res)=> {
 });
 
 app.get('/login',(req, res)=> {
-    res.sendFile(__dirname+'/views/login.html');
+    if (req.cookies.userInfo!==undefined) {
+        res.redirect('/profile');
+    } else {
+        res.sendFile(__dirname+'/views/login.html');
+    }
+});
+
+app.get('/logout',(req, res)=> {
+    res.clearCookie('userInfo');
+    res.sendFile(__dirname+'/views/index.html');
 });
 
 app.get('/register',(req, res)=> {
-    res.sendFile(__dirname+'/views/register.html');
+    if (req.cookies.userInfo!==undefined) {
+        res.redirect('/profile');
+    } else {
+        res.sendFile(__dirname+'/views/register.html');
+    }
 });
 
 ///*
 app.get('/profile',(req, res)=> {
-    res.sendFile(__dirname+'/views/profile.html');
-    //res.sendFile(__dirname+'/views/profile.html?id='+req.params.userid);
+    ///*
+    console.log('out.profile: ',req.cookies.userInfo);
+    console.log(req.cookies.userInfo===undefined);
+    if (req.cookies.userInfo!==undefined) {
+        console.log('profile: ',req.cookies.userInfo);
+        res.sendFile(__dirname+'/views/profile.html');
+    } else {
+        res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
+    }
+    //*/
 });
 //*/
+
+
+app.post('/login',(req,res)=> {
+    console.log('login guard: ',req.cookies.userInfo);
+    if (req.cookies.userInfo===undefined) {
+        console.log('req.body: ',req.body);
+        db.User.findOne(req.body).exec((err,user)=> {
+            if (err) { 
+                res.status(INTERNAL_ERR).json({'status': INTERNAL_ERR});
+            } else {
+                if (user=={}) {
+                    res.status(NOT_FOUND_ERR).json({'status': NOT_FOUND_ERR});
+                } else {
+                    console.log('setting cookie');
+                    res.cookie('userInfo',user,{expire: new Date(3600*1000*24 + Date.now()), httpOnly: true});
+                    res.status(OK).json({'status': OK});
+                }
+            }
+        });
+    } else {
+        res.status(OK).json({'status': OK});
+    } 
+});
+
+
+app.get('/api/profile',(req,res)=> {
+    if (req.cookies.userInfo!==undefined) {
+        console.log('api/profile: ',req.cookies.userInfo);
+        db.User.findById(req.cookies.userInfo._id)
+        .populate('preference')
+        .exec((err,users)=> {
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error'}); }
+            db.Post.find({'post_by': users._id})
+            .populate('users')
+            .exec((err,posts)=> {
+                if (err) { res.status(INTERNAL_ERR).json({error:'internal error'}); }
+                var userObj= {}
+                userObj['username']= users.username;
+                userObj['email']= users.email;
+                userObj['location']= users.location;
+                userObj['join_date']= users.join_date;
+                userObj['preference']= users.preference;
+                userObj['img_url']= users.img_url;
+                console.log('api profile: ',{'user': userObj, 'posts': posts});
+                res.json({'user': userObj, 'posts': posts});
+            });
+        });
+    } else {
+        res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
+    }
+});
 
 app.get('/profile/:userid',(req, res)=> {
     res.redirect('/profile?userid='+req.params.userid);
@@ -138,11 +228,9 @@ app.patch('/api/users/:user_id', (req,res)=>{
         {'_id': req.params.user_id},
         {'$set': req.body},
         {upsert: true},
-    ).populate('category').exec(
+    ).populate('categories').exec(
         (err,updatedOne)=> {
-            console.log(updatedOne);
-            if (err) { res.status(500).json({error:'internal error:',description: err}); }
-            //console.log(req.body);
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error:',description: err}); }
             res.json(req.body);
     });
 });

@@ -42,7 +42,10 @@ button[name=delete_post] {
 
 p[name=descrp-container] {
     text-align: left;
+    height: 25vh;
+    overflow-y: scroll;
 }
+
 
 
 .alert {

@@ -2,12 +2,9 @@
     box-sizing: border-box;
 }
 
-html, body {
-    text-align: center;
-}
-
 body {
-    font-family: 'Rubik', sans-serif;
+    text-align: center;
+    font-family: 'Rubik', sans-serif !important;
 }
 
 /* 
@@ -80,8 +77,8 @@ p[name=descrp-container] {
 }
 
 .post-snippet {
-    width: 60%;
-    margin: 20px 20%;
+    width: 80%;
+    margin: 20px 10%;
     border-radius: 10px;
     border: 1px solid gray;
     padding: 20px 20px;
