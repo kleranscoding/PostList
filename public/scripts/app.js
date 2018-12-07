@@ -63,7 +63,7 @@ function clearViewModal() {
 
 $(document).ready(function(){
 
-    getPosts();
+    //getPosts();
     
     $('#post_lists').on('click','.learn-more',function(){
         var $article= $(this);

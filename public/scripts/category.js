@@ -34,6 +34,49 @@ function getCategories() {
     });
 }
 
+function appendToPostsToList(catPosts) {
+    clearDisplayList();
+    var $displayText= 'none found';
+    if (catPosts.length>0) {
+        $displayText= `displaying ${catPosts.length} results`;
+    }
+    $('#show_posts').append(`<span>${$displayText}</span>`);
+    catPosts.forEach((post)=> {
+        var descrpLen= post.description.length;
+        var dots= '';
+        if (descrpLen>maxLen) {
+            descrpLen= maxLen;
+            dots= '...';
+        } 
+        $('#show_posts').append(`
+        <article class='post-snippet' data-id='${post._id}'>
+            <div class='row'>
+            <div class='col-md-12'>
+                <h3>${post.title}</h3>
+            </div> 
+            </div> 
+            <div class='row'>
+            <div class='col-md-4'>
+            <img class='img-thumbnail' src='${post.images.length>0? post.images[0]: "assets/postlist_default.jpg"}' />
+            </div>  
+            <div class='col-md-8'>
+                <p class='text-truncate'>
+                ${post.description.substring(0,descrpLen)}${dots}
+                </p>
+                <div class='row'>
+                <div class='col-md-2'>
+                    <span type='button' class='learn-more label label-info'>
+                    Learn More
+                    </span>
+                </div>
+                </div>
+            </div>  
+            </div>
+        </article>
+        `);
+    });
+}
+
 function searchPostsByCategory() {
     var $cat_id= $('#cat_options option:selected').val();
     console.log($cat_id);
@@ -42,45 +85,7 @@ function searchPostsByCategory() {
         'method': 'GET',
         'url': `/api/category/${$cat_id}`,
         'success': function(catPosts) {
-            var $displayText= 'none found';
-            if (catPosts.posts.length>0) {
-                $displayText= `displaying 1-${catPosts.posts.length} results`;
-            }
-            $('#show_posts').append(`<span>${$displayText}</span>`);
-            catPosts.posts.forEach((post)=> {
-                var descrpLen= post.description.length;
-                var dots= '';
-                if (descrpLen>maxLen) {
-                    descrpLen= maxLen;
-                    dots= '...';
-                } 
-                $('#show_posts').append(`
-                <article class='post-snippet' data-id='${post._id}'>
-                  <div class='row'>
-                    <div class='col-md-12'>
-                      <h3>${post.title}</h3>
-                    </div> 
-                  </div> 
-                  <div class='row'>
-                    <div class='col-md-4'>
-                    <img class='img-thumbnail' src='${post.images.length>0? post.images[0]: "assets/postlist_default.jpg"}' />
-                    </div>  
-                    <div class='col-md-8'>
-                      <p class='text-truncate'>
-                        ${post.description.substring(0,descrpLen)}${dots}
-                      </p>
-                      <div class='row'>
-                        <div class='col-md-2'>
-                          <span type='button' class='learn-more label label-info'>
-                            Learn More
-                          </span>
-                        </div>
-                      </div>
-                    </div>  
-                  </div>
-                </article>
-                `);
-            });
+            appendToPostsToList(catPosts.posts);
         },
         'error': function(err1,err2,err3) {
             console.log(err1,err2,err3);
@@ -140,6 +145,22 @@ $(document).ready(function(){
     });
 
     $('#modal-post button[data-dismiss=modal]').on('click',clearViewModal);
+
+    $('button[name=search_text_button]').on('click',function(){
+        var $text_val= $('#text_option').val();
+        if ($text_val=='') return;
+       $.ajax({
+            'method': 'GET',
+            'url': `/api/search/posts?q=${$text_val}`,
+            'data': JSON.stringify($text_val),
+            'dataType': 'json',
+            'contentType': 'application/json',
+            'success': function(results) {
+                appendToPostsToList(results);
+            },
+            'error': function(e1,e2,e3){ console.log(e1,e2,e3); }
+        })
+    });
 
 
 

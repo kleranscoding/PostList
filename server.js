@@ -194,7 +194,7 @@ app.delete('/api/profile/posts/:post_id', (req,res)=>{
     if (req.cookies.userInfo!==undefined) {
         db.Post.remove({'_id': req.params.post_id})
         .exec((err,deletedPost)=> {
-            if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
+            if (err) { res.status(NOT_FOUND_ERR).json({error:'not found', 'description': err}); }
             res.json({'_id': req.params.post_id, 'message': deletedPost});
         });
     } else {
@@ -312,22 +312,23 @@ app.put('/api/users/:user_id/posts/:post_id', ctrl.post.update);
 
 // get all users
 app.get('/api/search/users', (req,res)=> {
+    //
     db.User.find(req.query)
     .exec((err,foundUser)=> {
-        if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
+        if (err) { res.status(NOT_FOUND_ERR).json({error:'not found', 'description': err}); }
         res.json(foundUser);
     });
 });
 
 app.get('/api/search/posts', (req,res)=> {
-    db.Post.find(req.query)
+    db.Post.find({'title': new RegExp(req.query.q,'i')})
     .exec((err,foundPosts)=> {
-        if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
+        if (err) { res.status(NOT_FOUND_ERR).json({error:'not found', 'description': err}); }
         res.json(foundPosts);
     });
 });
 
-
+app.get('/api/search/posts/:cat_id', ctrl.post.index_by_cat_id);
 
 
 
