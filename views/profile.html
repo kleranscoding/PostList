@@ -3,7 +3,6 @@
   <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>PostList</title>
     <title>PostList | Profile</title>
     <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
@@ -17,13 +16,24 @@
 
 
     <header>
-      <nav class='navbar navbar-expand-lg navbar-light bg-light'>
-        <a class='navbar-brand' href='/'>#PostList</a>
-        <ul class='nav navbar-nav'>
-          <li class='active'><a href='/'>Home</a></li>
-          <li><a href='/search'>Search</a></li>
-          <li><a href='/logout'>Logout</a></li>
-        </ul>
+      <nav class='navbar navbar-inverse navbar-light bg-light'>
+        <div class='container-fluid'>
+          <div class='navbar-header'>
+            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#navbar'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </button>  
+            <a class='navbar-brand' href='/'>#PostList</a>
+          </div>  
+          <div class='collapse navbar-collapse' id='navbar'>
+            <ul class='nav navbar-nav'>
+              <li class='active'><a href='/profile'>Profile</a></li>
+              <li><a href='/search'>Search</a></li>
+              <li><a href='/logout'><span class='glyphicon glyphicon-log-out'></span> Logout</a></li>
+            </ul>
+          </div>
+        </div>    
       </nav>
     </header>
 
@@ -38,7 +48,7 @@
       <div class='row' name='profile_header'>
         
         <div class='col-md-3'>
-          <img name='img' class='img-responsive' src='' alt='user'>
+          <img name='img' class='img-responsive img-thumbnail' src='' alt='user'>
           <button name='edit_prof_img' class='btn btn-primary'>
             change profile image
           </button>
@@ -78,7 +88,7 @@
           <div class='row preference'>
             <h3>
               <div class='row'>
-                  Preference
+                Preference
                 <button name='edit_pref' class='btn'>
                   <span class='glyphicon glyphicon-pencil'></span>
                 </button>
@@ -145,31 +155,24 @@
       <div class='modal-dialog' role='document'>
         <div class='modal-content'>
           <div class='modal-header'>
-            <!-- <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-              <span aria-hidden='true'>&times;</span>
-            </button> -->
             <h3 class='modal-title'>
+              <h4>Title (required) </h4>
               <input type='text' name='title' placeholder='Title'>
             </h3>
           </div>
           <div class='modal-body'>
             <div name='image-container'></div>
-            <div class='alert'>
-              <div name='category-container'>
-                <p>Category:</p>
-                <div name='display_cat' class='col-md-12'></div>
-              </div>
-              <!--
-              <p name='post-by-container'>
-                Post By: <span></span>
-              </p>
-              <p name='date-container'>
-                Date: <span></span> 
-              </p>
-              -->
+            
+            <div name='category-container'>
+              <h4>Select Category (required)</h4>
+              <div name='display_cat' class='col-md-12'></div>
             </div>
-            <textarea name='descrp' style='resize:none' placeholder='Description'>
+          
+            <div name='descrp-container'>
+              <h4>Description (required)</h4>
+              <textarea name='descrp' style='resize:none' placeholder='Description'>
             </textarea>
+            </div>
             <div class='contact-info'>
               <p class='mb-0' name='contact-container'>
                 Contact Info:
@@ -194,7 +197,10 @@
         <div class='modal-content'>
           <div class='modal-header'>
             <h3 class='modal-title'>
-              <input name='title' type='text' placeholder='Title' required> 
+              <div class='col-md-8 col-md-offset-2'>
+              <label for='create_title'><h4>Title (required) </h4></label>
+              <input id='create_title' name='title' type='text' class='form-control' placeholder='Title' required> 
+              </div>
             </h3>
             <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
               <span aria-hidden='true'>&times;</span>
@@ -203,7 +209,7 @@
           <div class='modal-body'>
             <h4>Select Category (required)</h4>
             <div class='more_categories'></div>
-            <h4>Please enter a brief description...</h4>
+            <h4>Please enter a brief description... <h5>(required)</h5></h4>
             <textarea name='description' placeholder='Description' required></textarea>
             <!-- <h3><input type='text' placeholder=''></h3> -->
             <h4>Contact Info</h4>

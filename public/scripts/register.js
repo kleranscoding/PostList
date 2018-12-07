@@ -57,7 +57,7 @@ $(document).ready(function(){
 
     $('#create').on('click', function(){
         if (checkEmptyVal($('#username'))) return;
-        if (!$emailChecked || checkEmptyVal($('#email'))) return;
+        if ($('#email').val().indexOf('@')==-1 || !$emailChecked || checkEmptyVal($('#email'))) return;
         if (!$passwordChecked || checkEmptyVal($('#password'))) return;
         if (checkEmptyVal($('#confirm_pwd'))) return;
         if (checkEmptyVal($('#loc'))) return;

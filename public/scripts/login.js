@@ -33,7 +33,7 @@ $(document).ready(function() {
                 if (res.status==200) { 
                     $('#login_msg').attr('class','');
                     $('#login_msg').html('');
-                    //$(location).attr('href','/profile');
+                    $(location).attr('href','/profile');
                 } else {
                     $('#login_msg').addClass('alert alert-danger');
                     $('#login_msg').html('incorrect email or password');

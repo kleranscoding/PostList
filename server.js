@@ -38,16 +38,27 @@ app.use('/',(req,res,next)=>{
 });
 
 app.get('/',(req, res)=> {
-    //res.locals.erewui
-    res.sendFile(__dirname+'/views/index.html');
+    if (req.cookies.userInfo!==undefined) {
+        res.sendFile(__dirname+'/views/index_profile.html');
+    } else {
+        res.sendFile(__dirname+'/views/index.html');
+    }
 });
 
 app.get('/home',(req, res)=> {
-    res.sendFile(__dirname+'/views/index.html');
+    if (req.cookies.userInfo!==undefined) {
+        res.sendFile(__dirname+'/views/index_profile.html');
+    } else {
+        res.sendFile(__dirname+'/views/index.html');
+    }
 });
 
 app.get('/search',(req, res)=> {
-    res.sendFile(__dirname+'/views/category.html');
+    if (req.cookies.userInfo!==undefined) {
+        res.sendFile(__dirname+'/views/category_profile.html');
+    } else {
+        res.sendFile(__dirname+'/views/category.html');
+    }
 });
 
 app.get('/login',(req, res)=> {

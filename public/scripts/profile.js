@@ -440,6 +440,41 @@ $(document).ready(function(){
         });
         
     });
+
+    $('button[name=edit_prof_img]').on('click',function(){
+        $(this).fadeOut();
+        $('.update_prof_img_form').fadeIn();
+    });
+
+    $('button[name=cancel_edit_prof_img]').on('click',function(){
+        $(this).parent().fadeOut();
+        $('button[name=edit_prof_img]').fadeIn();
+    });
+
+    $('button[name=save_edit_prof_img]').on('click',function(){
+        
+        var dataObj= {'img_url': $('input[name=input_prof_img]').val()};
+        $.ajax({
+            'type': 'PATCH',
+            'url': '/api/profile',
+            'data': JSON.stringify(dataObj),
+            'contentType': 'application/json',
+            'success': function(output){ 
+                var key= Object.getOwnPropertyNames(output)[0];
+                var img= output[key];
+                $('img[name=img]').attr('src',img.length>0? img: "assets/postlist_default.jpg");;
+                $('input[name=input_prof_img]').val(img);
+                $('.update_prof_img_form').fadeOut();
+                $('button[name=edit_prof_img]').fadeIn();
+            },
+            'error': function(e1,e2,e3) {
+                $('.update_prof_img_form').fadeOut();
+                $('button[name=edit_prof_img]').fadeIn();
+            }
+        });
+        
+    });
+    
     
 });
 

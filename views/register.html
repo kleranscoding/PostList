@@ -15,14 +15,25 @@
   <body>
 
     <header>
-      <nav class='navbar navbar-expand-lg navbar-light bg-light'>
-        <a class='navbar-brand' href='/'>#PostList</a>
-        <ul class='nav navbar-nav'>
-          <li class='active'><a href='/'>Home</a></li>
-          <li><a href='/search'>Search</a></li>
-          <li><a href='/login'>Login</a></li>
-          <li><a href='/register'>Register</a></li>
-        </ul>
+      <nav class='navbar navbar-inverse navbar-light bg-light'>
+        <div class='container-fluid'>
+          <div class='navbar-header'>
+            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#navbar'>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+              <span class='icon-bar'></span>
+            </button>  
+            <a class='navbar-brand' href='/'>#PostList</a>
+          </div>  
+          <div class='collapse navbar-collapse' id='navbar'>
+            <ul class='nav navbar-nav'>
+              <li class='active'><a href='/'>Home</a></li>
+              <li><a href='/search'>Search</a></li>
+              <li><a href='/login'><span class='glyphicon glyphicon-log-in'></span> Login</a></li>
+              <li><a href='/register'><span class='glyphicon glyphicon-user'></span> Register</a></li>
+            </ul>
+          </div>
+        </div>    
       </nav>
     </header>
 
@@ -37,7 +48,7 @@
       <div class='row'>
         <div class='col-md-6'>
           <div class='col-md-12'>
-            <h3>-- Basic Login Info --</h2>
+            <h3><span class='label label-info'>-- Basic Info --</span></h2>
           </div>
 
           <div class='col-md-10'>
@@ -69,7 +80,7 @@
 
         <div class='col-md-6'>
           <div class='col-md-12'>
-            <h3>-- More about you --</h2>
+            <h3><span class='label label-info'>-- More about you --</span></h2>
           </div>
 
           <div class='col-md-10'>
@@ -83,7 +94,13 @@
             </div>
 
             <div class='form-check'>
-              <h4>Select from below that may interest you</h4>
+              <h3>
+                <span class='label label-info'>
+                  Select from below that may interest you <br>
+                   (you may select later)
+                </span>  
+              </h3>
+
             </div>
           </div>
 
