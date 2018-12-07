@@ -44,7 +44,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#cancel').on('click',function(){ $(location).attr('href','/'); });
+    $('#cancel').on('click',function(){ $(location).attr('href','/login'); });
 
     $('#create').on('click', function(){
         if (checkEmptyVal($('#username'))) return;

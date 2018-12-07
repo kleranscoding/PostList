@@ -29,17 +29,6 @@ app.use(cookieParser());
  * Home/Root
  */
 
- /*
- app.use('/',(req,res,next)=>{
-    //get cookies data 
-    // check if that cookeis is undefined
-    // if defined get user data and set to locals variable
-    // if undefined set userdata in locals null or anything
-    res.cookie('name', 'express').send('cookie set');
-    next();
-});
-//*/
-
 app.use('/',(req,res,next)=>{
     //const data = req.cookies.userInfo;
     //console.log(data);
@@ -55,7 +44,7 @@ app.get('/home',(req, res)=> {
     res.sendFile(__dirname+'/views/index.html');
 });
 
-app.get('/category',(req, res)=> {
+app.get('/search',(req, res)=> {
     res.sendFile(__dirname+'/views/category.html');
 });
 
@@ -92,9 +81,7 @@ app.get('/profile',(req, res)=> {
 /*== POST ==*/
 
 app.post('/login',(req,res)=> {
-    console.log('login guard: ',req.cookies.userInfo);
     if (req.cookies.userInfo===undefined) {
-        console.log('req.body: ',req.body);
         db.User.findOne(req.body).exec((err,user)=> {
             if (err) { 
                 res.status(INTERNAL_ERR).json({'status': INTERNAL_ERR});
@@ -117,7 +104,6 @@ app.post('/login',(req,res)=> {
 
 app.get('/api/profile',(req,res)=> {
     if (req.cookies.userInfo!==undefined) {
-        console.log('api/profile: ',req.cookies.userInfo);
         db.User.findById(req.cookies.userInfo._id)
         .populate('preference')
         .exec((err,users)=> {
@@ -133,7 +119,6 @@ app.get('/api/profile',(req,res)=> {
                 userObj['join_date']= users.join_date;
                 userObj['preference']= users.preference;
                 userObj['img_url']= users.img_url;
-                console.log('api profile: ',{'user': userObj, 'posts': posts});
                 res.json({'user': userObj, 'posts': posts});
             });
         });
@@ -172,7 +157,6 @@ app.post('/api/profile/posts', (req,res)=> {
 // update some user info
 app.patch('/api/profile', (req,res)=>{
     if (req.cookies.userInfo!==undefined) {
-        console.log(req.body);
         db.User.findOneAndUpdate(
             {'_id': req.cookies.userInfo._id},
             {'$set': req.body},
@@ -328,15 +312,22 @@ app.put('/api/users/:user_id/posts/:post_id', ctrl.post.update);
 
 // get all users
 app.get('/api/search/users', (req,res)=> {
-    console.log(req.query);
-    //return;
     db.User.find(req.query)
     .exec((err,foundUser)=> {
-        if (err) { res.status(500).json({error:'internal error:',description: err}); }
-        console.log(foundUser);
+        if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
         res.json(foundUser);
     });
 });
+
+app.get('/api/search/posts', (req,res)=> {
+    db.Post.find(req.query)
+    .exec((err,foundPosts)=> {
+        if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
+        res.json(foundPosts);
+    });
+});
+
+
 
 
 

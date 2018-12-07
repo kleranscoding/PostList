@@ -22,7 +22,7 @@
         <a class='navbar-brand' href='/'>#PostList</a>
         <ul class='nav navbar-nav'>
           <li class='active'><a href='/'>Home</a></li>
-          <li><a href='/category'>Categories</a></li>
+          <li><a href='/category'>Search</a></li>
           <li><a href='/logout'>Logout</a></li>
         </ul>
       </nav>
@@ -37,36 +37,42 @@
     </div>
       
       <div class='row' name='profile_header'>
+        
         <div class='col-md-3'>
           <img name='img' class='img-responsive' src='' alt='user'>
           <button name='edit_prof_img' class='btn btn-primary'>
             change profile image
           </button>
+          <div class=''>
+            <input name='input_prof_img' type='text' placeholder='image_url'>
+            <button name='cancel_edit_prof_img' class='btn btn-primary'>Cancel</button>
+            <button name='save_edit_prof_img' class='btn btn-success'>Save</button>
+          </div>
         </div>
         
         <div name='basic_info' class='col-md-4'>
           
-            <h4>
-                <span>username </span>
-                <span class='glyphicon glyphicon-pencil'></span>
-                <span id='username' ></p>  
-            </h4>
-     
-            <h4>
-                <span>location </span>
-                <span class='glyphicon glyphicon-pencil'></span>
-                <span id='location' ></p>  
-            </h4>
-            
-            <h5> 
-              email: 
-              <span id='email'></span>
-            </h5>
+          <h4>
+            <span>username </span>
+            <span class='glyphicon glyphicon-pencil'></span>
+            <span id='username' ></p>  
+          </h4>
+    
+          <h4>
+            <span>location </span>
+            <span class='glyphicon glyphicon-pencil'></span>
+            <span id='location' ></p>  
+          </h4>
+          
+          <h5> 
+            email: 
+            <span id='email'></span>
+          </h5>
 
-            <h5> 
-              join date: 
-              <span id='join_date'></span>
-            </h5>
+          <h5> 
+            join date: 
+            <span id='join_date'></span>
+          </h5>
 
         </div>
         <div class='col-md-3'>

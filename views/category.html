@@ -3,7 +3,7 @@
   <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>PostList | Category</title>
+    <title>PostList | Search</title>
     <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
     <link rel='stylesheet' href='styles/main.css'>
     <link rel='stylesheet' href='styles/category.css'>
@@ -20,23 +20,44 @@
             <a class='navbar-brand' href='/'>#PostList</a>
             <ul class='nav navbar-nav'>
               <li class='active'><a href='/'>Home</a></li>
-              <li><a href='/category'>Search</a></li>
+              <li><a href='/search'>Search</a></li>
               <li><a href='/login'>Login</a></li>
               <li><a href='/register'>Register</a></li>
             </ul>
           </nav>
         </header>
     
-    <div class='container'>
-      <h3>Choose a Category</h3>
-      <form id='search_form'>
-        <select id='cat_options' class='form-control'>
-        </select>
-        <button type='button' class='btn btn-success'>GO!</button>
-      </form>
-    </div>
     
-    <div id='show_posts'></div>
+      <div class='row'>
+        
+        <div class='col-md-4'>
+          <label for='text_option'>
+            <h4>Search post</h4>
+          </label>
+          <div class='row'>
+              <div class='col-md-2'></div>
+            <div class='col-md-8'>
+              <input class='form-control' type='text' id='text_option'>
+            </div>   
+            <div class='col-md-2'>
+              <button type='button' name='search_text_button' class='btn btn-success'>Search!</button> 
+            </div>    
+          </div>
+        </div>  
+<!-- 
+        <div class='col-md-4'>
+          <form id='search_form'>
+            <label for='cat_options'>
+              <h4>Choose a Category</h4>
+            </label>
+            <select id='cat_options' class='form-control'></select>
+            <button type='button' class='btn btn-success'>GO!</button>
+          </form>
+        </div> -->
+      </div>
+    
+      <div id='show_posts'></div>
+      
 
     <!-- display post with modal -->
     <article class='modal fade' id='modal-post' tabindex='-1' role='dialog'>

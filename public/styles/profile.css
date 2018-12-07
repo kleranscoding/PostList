@@ -1,6 +1,6 @@
 body {
     font-family: 'Rubik', sans-serif;
-    background: linear-gradient(rgba(242,246,248,1) 0%, rgba(216,225,231,1) 37%, rgba(181,198,208,1) 76%, rgba(224,239,249,1) 100%);
+    /* background: linear-gradient(rgba(242,246,248,1) 0%, rgba(216,225,231,1) 37%, rgba(181,198,208,1) 76%, rgba(224,239,249,1) 100%); */
 }
 
 img[name=img] {
@@ -47,31 +47,11 @@ p[name=descrp-container] {
 }
 
 
-
 .alert {
     width: 60%;
     margin: 5px 20%;
 }
 
-/* .col-1 { 
-    height : 20vh;
-    text-align: center;
-    padding: 10px;   
-}
-
-.col-xs {
-    padding: 40px;
-}
-
-.col-md-6, .col-md-4 {
-    text-align: left;
-}
-
-.col-md-6, .col-md-4, .col-md-2 {
-    border-radius: 5px;
-    border: 1px solid black;
-    margin: 5px;
-} */
 
 .welcome {
     text-align: left;

@@ -5,6 +5,7 @@
 body {
     text-align: center;
     font-family: 'Rubik', sans-serif !important;
+    background: linear-gradient(90deg, rgb(252, 184, 170) 10%, rgb(233, 166, 196) 90%);
 }
 
 /* 

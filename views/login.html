@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>PostList | Login</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'>
     <link rel='stylesheet' href='styles/main.css'>
-    <link rel='stylesheet' type='text/css' media='screen' href='styles/login.css' />
+    <link rel='stylesheet' href='styles/login.css' />
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.css'>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
@@ -16,26 +16,20 @@
   </head>
 
   <body>
-    <!--
-    <div class='container'>
-      <div class='row'>
-        <div class='com-md-12'>
-          <div class='notification login-alert'>
-            Please Enter Your Username And Password!
-          </div>
-          <div class='notification notification-success logged-out'>
-            You logged out successfully!
-          </div>
-          <div class='well welcome-text'>
-            Hello there, to access our app please
-            <button class='btn btn-default btn-login'>Log in</button>
-            or
-            <a href='/create'><button class='btn btn-default btn-register'>Register</button></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
+    
+    <header>
+      <div class='banner-pic'></div>
+      <nav class='navbar navbar-expand-lg navbar-light bg-light'>
+        <a class='navbar-brand' href='/'>#PostList</a>
+        <ul class='nav navbar-nav'>
+          <li class='active'><a href='/'>Home</a></li>
+          <li><a href='/search'>Search</a></li>
+          <li><a href='/login'>Login</a></li>
+          <li><a href='/register'>Register</a></li>
+        </ul>
+      </nav>
+    </header>
+    
     <div class='container'>
       <div class='row'>
         <div class='col-md-12'>
@@ -43,7 +37,7 @@
             <form action='/'>
               <legend>Login</legend>
                 <div class='form-group'>
-                  <label for='username-email'>E-mail</label>
+                  <label for='username-email'>Email</label>
                   <input value='' id='username-email' placeholder='E-mail' type='text' class='form-control' />
                 </div>
                 <div class='form-group'>
@@ -51,16 +45,18 @@
                   <input id='password' type='password' placeholder='Password' type='text' class='form-control' />
                 </div>
                 <div class='form-group text-center'>
-                  <button class='btn btn-danger btn-cancel'>Cancel</button>
+                  <button class='btn btn-primary btn-cancel'>Cancel</button>
                   <a href='/profile'><input type='submit' class='btn btn-success btn-login-submit' value='Login' /></a>
                 </div>
               </form>
+              <span>Not a user? <a href='/register'>
+                <button type='button' class='btn btn-link'>
+                  Register!
+                </button>
+              </a>
+              </span>
             </div>
-            <!--
-            <div class='logged-in well'>
-              <h1>You are loged in! <div class='pull-right'><button class='btn-logout btn btn-danger'><span class='glyphicon glyphicon-off'></span> Logout</button></div></h1>
-            </div>
-            -->
+
           </div>
         </div>
       </div>
