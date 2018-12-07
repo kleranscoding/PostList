@@ -346,7 +346,10 @@ app.get('/api/search/users', (req,res)=> {
 });
 
 app.get('/api/search/posts', (req,res)=> {
-    db.Post.find({'title': new RegExp(req.query.q,'i')})
+    db.Post.find(
+        {'$or': [{'title': new RegExp(req.query.q,'i')},
+                 {'description': new RegExp(req.query.q,'i')}]
+        })
     .exec((err,foundPosts)=> {
         if (err) { res.status(NOT_FOUND_ERR).json({error:'not found', 'description': err}); }
         res.json(foundPosts);

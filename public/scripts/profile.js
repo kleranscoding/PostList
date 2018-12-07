@@ -349,7 +349,7 @@ $(document).ready(function(){
     
     // save preference
     $('button[name=save_pref]').on('click',function(){
-        var $checked= $('input[type=checkbox]:checked');
+        var $checked= $('div[name=display_pref]').find('input[type=checkbox]:checked');
         //if ($checked.length<1) return;
         
         var $selectedPref= [];
