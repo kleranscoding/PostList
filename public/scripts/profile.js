@@ -94,7 +94,7 @@ function appendPostToList(target,post) {
 }
 
 function getPosts(postsArray,target) {
-    console.log(target);
+    //console.log(target);
     postsArray.forEach((post)=> {
         appendPostToList(target,post);
     });
@@ -171,6 +171,7 @@ function renderPost(post) {
             .append(`<img class='img-responsive img-thumbnail' src='assets/postlist_default.jpg'>`);
     }
     var $postCat= '';
+    //console.log('render post',post.categories);
     post.categories.forEach((cat)=> {
         if (typeof cat=='object') cat= cat._id;
         $postCat+= `<button class='btn btn-info' data-id='${cat}'>${$categoryDict[cat]}</span>`;
@@ -258,7 +259,7 @@ function instantUpdateByID(field,target,oldTag) {
         $(this).replaceWith($(`<${oldTag} id='${field}'>${$text}</${oldTag}>`));
         if ($text.trim()==$initProfileVal.trim()) return;
         var dataObj={}; dataObj[field]= $text;
-        console.log(dataObj);
+        //console.log(dataObj);
         $.ajax({
             'type': 'PATCH',
             'url': '/api/profile',
@@ -381,14 +382,14 @@ $(document).ready(function(){
         var $modalBodyEdit= $('#modal-post-edit .modal-body');
         var $modalBody= $('#modal-post .modal-body');
         var $postCategories= $modalBody.find('p[name=category-container] button');
-        $('div[name=display_cat]').html('');
+        $('#modal-post-edit div[name=display_cat]').html('');
         for (var i=0;i<$postCategories.length;i++) {
-            appendCheckBoxToCategory($('div[name=display_cat]'),$postCategories.eq(i).attr('data-id'),$postCategories.eq(i).html(),true);
+            appendCheckBoxToCategory($('#modal-post-edit div[name=display_cat]'),$postCategories.eq(i).attr('data-id'),$postCategories.eq(i).html(),true);
         }
         for (var i=0;i<$categories.length;i++) {
             var cat= $categories[i];
-            if ($('div[name=display_cat]').find(`input[value=${cat._id}]`).length>0) continue;
-            appendCheckBoxToCategory($('div[name=display_cat]'),cat._id,cat.name,false);
+            if ($('#modal-post-edit div[name=display_cat]').find(`input[value=${cat._id}]`).length>0) continue;
+            appendCheckBoxToCategory($('#modal-post-edit div[name=display_cat]'),cat._id,cat.name,false);
         }
         targetValByName($('#modal-post-edit'),'input','','title',getTargetHTMLByName($('#modal-post'),'h2','','title'));
         targetValByName($modalBodyEdit,'textarea','','descrp',getTargetHTMLByName($modalBody,'p','span','descrp-container'));
@@ -397,9 +398,9 @@ $(document).ready(function(){
 
     // save edit post
     $('button[name=save_post]').on('click',function(){
-        console.log('update');
-        var $checked= $('div input[type=checkbox]:checked');
-        console.log($checked.length);
+        //console.log('update');
+        var $checked= $('#modal-post-edit div input[type=checkbox]:checked');
+        //console.log($checked.length);
         if ($checked.length<1) return;
         var $modalBodyEdit= $('#modal-post-edit .modal-body');
         var $title= getTargetValByName($('#modal-post-edit'),'input','','title');
@@ -420,13 +421,13 @@ $(document).ready(function(){
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
             'success': function(post){ 
-                location.reload(); return;
+                //location.reload(); return;
                 //console.log(post); 
                 closeEditPost();
                 clearViewModal();
+                //console.log('ajax save edit post: ',post.categories);
                 renderPost(post);
                 var $thisPost= $('#user_posts').find(`article[data-id=${$postid}]`);
-                console.log($thisPost);
                 $thisPost.find('.post_title').html(post.title);
                 $thisPost.find('.img-thumbnail').attr('src',post.images.length>0? post.images[0]: "assets/postlist_default.jpg");
                 var descrpLen= post.description.length;
