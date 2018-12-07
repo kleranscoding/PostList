@@ -5,6 +5,7 @@ body {
   padding-bottom: 50px;
 }
 
+
 label {
   margin: 5px;
 }
@@ -28,5 +29,9 @@ label {
 
 .row {
   padding: 5px;
+}
+
+#login_msg {
+  margin:5px;
 }
 

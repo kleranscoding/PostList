@@ -84,23 +84,25 @@ app.get('/profile',(req, res)=> {
 
 app.post('/login',(req,res)=> {
     if (req.cookies.userInfo===undefined) {
-        console.log(req.body);
-        console.log(req.body.email.trim());
         db.User.findOne({'email': req.body.email.trim()}).exec((err,user)=> {
             if (err) { 
                 res.status(INTERNAL_ERR).json({'status': INTERNAL_ERR});
             } else {
-                console.log('user',user);
-                if (user=={}) {
+                if (user==null || user=={}) {
                     res.status(NOT_FOUND_ERR).json({'status': NOT_FOUND_ERR});
                 } else {
                     bcrypt.compare(req.body.password.trim(), user.password, function(err, isMatch) {
+                        console.log(isMatch);
                         if (err) {
                             res.status(NOT_FOUND_ERR).json({'status': NOT_FOUND_ERR});
-                        } else {
-                            console.log('setting cookie');
+                        } 
+                        if (isMatch) {
+                            console.log('ok...');
                             res.cookie('userInfo',user,{expire: new Date(3600*1000*24 + Date.now()), httpOnly: true});
                             res.status(OK).json({'status': OK,'description': 'OK'});
+                        } else {
+                            console.log('no match');
+                            res.status(NOT_FOUND_ERR).json({'status': NOT_FOUND_ERR});
                         }
                     });
                     

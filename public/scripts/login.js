@@ -1,6 +1,16 @@
 console.log('sanity-check');
 
+function clearWarning() {
+    $('#login_msg').attr('class','');
+    $('#login_msg').html('');
+}
+    
+
 $(document).ready(function() {
+
+    $('#username-email').on('focus',clearWarning);
+    $('#password').on('focus',clearWarning);
+    
 
     $('.btn-login-submit').on('click',function(event){
         event.preventDefault();
@@ -11,7 +21,7 @@ $(document).ready(function() {
         if ($email=='' || $password=='') return;
 
         var dataObj= {'email': $email,'password': $password};
-        console.log(dataObj);
+        
         $.ajax({
             'method': 'POST',
             'url': '/login',
@@ -21,12 +31,18 @@ $(document).ready(function() {
             'success': function (res){
                 console.log(res);
                 if (res.status==200) { 
-                    $(location).attr('href','/profile');
+                    $('#login_msg').attr('class','');
+                    $('#login_msg').html('');
+                    //$(location).attr('href','/profile');
                 } else {
-                    $(location).attr('href','/login');
+                    $('#login_msg').addClass('alert alert-danger');
+                    $('#login_msg').html('incorrect email or password');
                 }
             },
-            'error': function(e1,e2,e3) { console.log(e1,e2,e3); }
+            'error': function(e1,e2,e3) { 
+                $('#login_msg').addClass('alert alert-danger');
+                $('#login_msg').html('incorrect email or password');
+            }
         });
 
     });
