@@ -43,7 +43,6 @@ app.use(cookieParser());
 app.use('/',(req,res,next)=>{
     //const data = req.cookies.userInfo;
     //console.log(data);
-
     next();
 });
 
@@ -81,21 +80,16 @@ app.get('/register',(req, res)=> {
     }
 });
 
-///*
 app.get('/profile',(req, res)=> {
-    ///*
-    console.log('out.profile: ',req.cookies.userInfo);
-    console.log(req.cookies.userInfo===undefined);
     if (req.cookies.userInfo!==undefined) {
         console.log('profile: ',req.cookies.userInfo);
         res.sendFile(__dirname+'/views/profile.html');
     } else {
         res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
     }
-    //*/
 });
-//*/
 
+/*== POST ==*/
 
 app.post('/login',(req,res)=> {
     console.log('login guard: ',req.cookies.userInfo);
@@ -119,6 +113,7 @@ app.post('/login',(req,res)=> {
     } 
 });
 
+/*== GET ==*/
 
 app.get('/api/profile',(req,res)=> {
     if (req.cookies.userInfo!==undefined) {
@@ -147,9 +142,83 @@ app.get('/api/profile',(req,res)=> {
     }
 });
 
-app.get('/profile/:userid',(req, res)=> {
-    res.redirect('/profile?userid='+req.params.userid);
+
+/*== POST ==*/
+
+// create a new post from user_id
+app.post('/api/profile/posts', (req,res)=> {
+    if (req.cookies.userInfo!==undefined) {
+        var newPost= new db.Post({
+            'title': req.body.title,
+            'date_of_post': req.body.date_of_post,
+            'description': req.body.description,
+            'images': req.body.images,
+            'categories': req.body.categories,
+            'post_by': req.cookies.userInfo._id,
+            'contact_info': req.body.contact_info
+        });
+        newPost.save((err,savedPost)=> {
+            if (err) { res.status(INTERNAL_ERR).json({error:'internal error', 'description': err}); }
+            res.json(savedPost);
+        });
+    } else {
+        res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
+    }
 });
+
+
+/*== PATCH ==*/
+
+// update some user info
+app.patch('/api/profile', (req,res)=>{
+    if (req.cookies.userInfo!==undefined) {
+        console.log(req.body);
+        db.User.findOneAndUpdate(
+            {'_id': req.cookies.userInfo._id},
+            {'$set': req.body},
+            {upsert: true},
+        ).populate('categories').exec(
+            (err,updatedOne)=> {
+                if (err) { res.status(INTERNAL_ERR).json({error:'internal error:',description: err}); }
+                res.json(req.body);
+        });
+    } else {
+        res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
+    }
+});
+
+// update an existing post by post_id from user_id (PATCH)
+app.patch('/api/profile/posts/:post_id', (req,res)=>{
+    if (req.cookies.userInfo!==undefined) {
+        db.Post.findOneAndUpdate(
+            {'_id': req.params.post_id, 'post_by': req.cookies.userInfo._id},
+            {'$set': req.body},
+            {new: true},
+            (err,updateOne)=> {
+                if (err) { res.status(INTERNAL_ERR).json({'error':'internal error','description': err}); }
+                res.json(updateOne);
+        });
+    } else {
+        res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
+    }
+});
+
+/*== DELETE ==*/
+
+// delete an existing post by post_id from user_id
+app.delete('/api/profile/posts/:post_id', (req,res)=>{
+    if (req.cookies.userInfo!==undefined) {
+        db.Post.remove({'_id': req.params.post_id})
+        .exec((err,deletedPost)=> {
+            if (err) { res.status(NOT_FOUND).json({error:'not found', 'description': err}); }
+            res.json({'_id': req.params.post_id, 'message': deletedPost});
+        });
+    } else {
+        res.status(FORBIDDEN_ERR).json({'error': `${FORBIDDEN_ERR} FORBIDDEN`});
+    }
+});
+
+
 
 /**
  * API home
@@ -221,20 +290,6 @@ app.post('/api/users', ctrl.user.create);
 // update user info
 app.put('/api/users/:user_id', ctrl.user.update);
 
-// update user some info
-app.patch('/api/users/:user_id', (req,res)=>{
-    console.log(req.body);
-    db.User.findOneAndUpdate(
-        {'_id': req.params.user_id},
-        {'$set': req.body},
-        {upsert: true},
-    ).populate('categories').exec(
-        (err,updatedOne)=> {
-            if (err) { res.status(INTERNAL_ERR).json({error:'internal error:',description: err}); }
-            res.json(req.body);
-    });
-});
-
 
 /**
  * Post
@@ -260,35 +315,11 @@ app.get('/api/category/:cat_id/posts', ctrl.post.index_by_cat_id);
 // get one post by post_id from category_id
 app.get('/api/category/:cat_id/posts/:post_id', ctrl.post.show_by_cat_id);
 
-/*== POST ==*/
-
-// create a new post from user_id
-app.post('/api/users/:user_id/posts', ctrl.post.create);
 
 /*== PUT ==*/
 
 // update an existing post by post_id from user_id (PUT)
 app.put('/api/users/:user_id/posts/:post_id', ctrl.post.update);
-
-/*== PATCH ==*/
-
-// update an existing post by post_id from user_id (PATCH)
-app.patch('/api/users/:user_id/posts/:post_id', (req,res)=>{
-    //console.log(req.body);
-    db.Post.findOneAndUpdate(
-        {'_id': req.params.post_id, 'post_by': req.params.user_id},
-        {'$set': req.body},
-        {new: true},
-        (err,updateOne)=> {
-            if (err) { res.status(500).json({error:'internal error:',description: err}); }
-            res.json(updateOne);
-    });
-});
-
-/*== DELETE ==*/
-
-// delete an existing post by post_id from user_id
-app.delete('/api/users/:user_id/posts/:post_id', ctrl.post.delete);
 
 
 /**

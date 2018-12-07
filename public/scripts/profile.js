@@ -4,7 +4,6 @@ const maxLen= 150;
 var $categories, $userid, $prefs, $initProfileVal, $postid;
 
 
-
 function targetValByName(target,tag1,tag2,name,val) {
     target.find(`${tag1}[name=${name}] ${tag2}`).val(val);
 }
@@ -42,17 +41,20 @@ function getCategory() {
 }
 
 function startProfilePage() {
-    $userid= $(location).attr('href').split('=')[1];
-    console.log($userid);
+    //$userid= $(location).attr('href').split('=')[1];
+    //console.log($userid);
+    console.log('in profile...');
     $.ajax({
         'method': 'GET',
-        'url': `/api/users/${$userid}`,
+        'url': '/api/profile',
         'success': function(user) {
             getUserInfo(user.user,user.posts);
         },
         'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
     });
 }
+
+
 
 function getPosts(posts,target) {
     console.log(target);
@@ -66,14 +68,14 @@ function getPosts(posts,target) {
         $(target).append(
         `<article class='post-snippet' data-id='${post._id}'>
             <div class='row'><div class='col-md-12'>
-                <h3>${post.title}</h3>
+                <h3 class='post_title'>${post.title}</h3>
             </div></div> 
             <div class='row'>
             <div class='col-md-4'>
-                <img class='img-thumbnail' src='${post.images.length>0? post.images[0]: "assets/postlist_default.jpg"}' />
+                <img class='img-thumbnail' src='${post.images.length==0? "assets/postlist_default.jpg": post.images[0]}' />
             </div>  
             <div class='col-md-8'>
-                <p class='text-truncate'>
+                <p class='descrp-snippet'>
                 ${post.description.substring(0,descrpLen)}${dots}
                 </p>
                 <div class='row'>
@@ -136,7 +138,7 @@ function displayPreference(prefArray) {
 
 function getUserInfo($user,$posts) {
     $('.welcome').html(`hi, <i name='user'>${$user.username}</i>`);
-    $('img[name=img]').attr('src',`${$user.img_url==''? "assets/postlist_default.jpg" : $user.img_url}`);
+    $('img[name=img]').attr('src',`${$user.img_url==undefined || $user.img_url==''? "assets/postlist_default.jpg" : $user.img_url}`);
     $('#username').html(`${$user.username}`);
     $('#email').html(`${$user.email}`);
     $('#location').html(`${$user.location}`);
@@ -200,7 +202,7 @@ function createNewPost() {
     ///*
     $.ajax({
         'method': 'POST',
-        'url': `/api/users/${$userid}/posts`,
+        'url': `/api/profile/posts`,
         'dataType': 'json',
         'data': JSON.stringify(dataObj),
         'contentType': 'application/json',
@@ -237,14 +239,13 @@ function instantUpdateByID(field,target,oldTag) {
         console.log(dataObj);
         $.ajax({
             'type': 'PATCH',
-            'url': `/api/users/${$userid}`,
+            'url': '/api/profile',
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
             'success': function(output){ 
                 var key= Object.getOwnPropertyNames(output)[0];
                 if (key=='username') { $('i[name=user]').html(output[key]); } 
                 $(`#${key}`).html(output[key]);
-                //location.reload(); 
             },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
@@ -283,8 +284,11 @@ $(document).ready(function(){
         var $post_id= $(this).parent().attr('data-id');
         $.ajax({
             'method': 'DELETE',
-            'url': `/api/users/${$userid}/posts/${$post_id}`,
-            'success': function(data) { location.reload(); },
+            'url': `/api/profile/posts/${$post_id}`,
+            'success': function(data) { 
+                console.log($(`article[data-id=${data._id}]`));
+                $(`article[data-id=${data._id}]`).remove(); 
+            },//location.reload(); },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
     });
@@ -346,7 +350,7 @@ $(document).ready(function(){
         var dataObj= {'preference': $selectedPref};
         $.ajax({
             'type': 'PATCH',
-            'url': `/api/users/${$userid}`,
+            'url': '/api/profile',
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
             'success': function(output){ 
@@ -433,7 +437,7 @@ $(document).ready(function(){
         console.log($postid);
         $.ajax({
             'type': 'PATCH',
-            'url': `/api/users/${$userid}/posts/${$postid}`,
+            'url': `/api/profile/posts/${$postid}`,
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
             'success': function(post){ 
@@ -461,8 +465,7 @@ $(document).ready(function(){
                             $postCat+= `<button class='btn btn-info' data-id='${$categories[j]._id}'>${$categories[j].name}</span>`;
                             break;
                         }
-                    }
-                    
+                    } 
                 });
                 $modalBody.find('p[name=category-container]').append($postCat);
                 targetHTMLByName($modalBody,'p','span','post-by-container',post.post_by.username);
@@ -470,6 +473,18 @@ $(document).ready(function(){
                 targetHTMLByName($modalBody,'p','span','location-container',post.post_by.location);
                 targetHTMLByName($modalBody,'p','span','descrp-container',`${post.description}`);
                 targetHTMLByName($modalBody,'p','span','contact-container',post.contact_info);
+
+                var $thisPost= $('#user_posts').find(`article[data-id=${$postid}]`);
+                console.log($thisPost);
+                $thisPost.find('.post_title').html(post.title);
+                $thisPost.find('.img-thumbnail').attr('src',post.images.length>0? post.images[0]: "assets/postlist_default.jpg");
+                var descrpLen= post.description.length;
+                var dots= '';
+                if (descrpLen>maxLen) {
+                    descrpLen= maxLen;
+                    dots= '...';
+                } 
+                $thisPost.find('.descrp-snippet').html(`${post.description.substring(0,descrpLen)}${dots}`);
             },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
