@@ -79,8 +79,11 @@ $(document).ready(function(){
             'contentType': 'application/json',
             'success': function(data) {
                 console.log(data);
+                if (data.status==200) {
+                    $(location).attr('href','/profile');
+                }
                 //if (data.length==0) return;
-                $(location).attr('href',`/profile?=${data._id}`);
+                
                 //$(location).attr('href','');
             },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }

@@ -91,7 +91,7 @@ app.post('/login',(req,res)=> {
                 } else {
                     console.log('setting cookie');
                     res.cookie('userInfo',user,{expire: new Date(3600*1000*24 + Date.now()), httpOnly: true});
-                    res.status(OK).json({'status': OK});
+                    res.status(OK).json({'status': OK,'description': 'OK'});
                 }
             }
         });

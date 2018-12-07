@@ -36,8 +36,13 @@ module.exports = {
             'preference': req.body.preference
         });    
         newUser.save((err,savedUser)=> {
-            if (err) { res.status(500).json({error:'internal error','description': err}); }
-            res.json(savedUser);
+            if (err) { res.status(500).json({
+                'status': 500, error:'internal error','description': err
+                }); 
+            }
+            //res.json(savedUser);
+            res.cookie('userInfo',savedUser,{expire: new Date(3600*1000*24 + Date.now()), httpOnly: true});
+            res.status(200).json({'status': 200, 'description': 'ok'});
         });
     },
 
