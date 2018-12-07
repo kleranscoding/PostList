@@ -93,13 +93,6 @@ p[name=descrp-container] {
     transform: scale(1.05);
 }
 
-/* .post-snippet .wrapper {
-    display: flex;
-    justify-content: space-around;
-    align-content: center;
-    flex-wrap: wrap;
-} */
-
 .post-snippet img {
     max-width: 50%;
     max-height: 50%;

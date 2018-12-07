@@ -7,10 +7,12 @@
 
 const portNum= 8000;
 const NOT_FOUND_ERR= 404, FORBIDDEN_ERR=403, OK=200, INTERNAL_ERR=500;
+const SALT_WORK_FACTOR = 10;
 const express= require('express');
 const app= express();
 const bodyParser= require('body-parser');
 const cookieParser= require('cookie-parser');
+const bcrypt= require('bcrypt');
 const db= require('./models');
 const ctrl = require('./controllers');
 
@@ -82,16 +84,26 @@ app.get('/profile',(req, res)=> {
 
 app.post('/login',(req,res)=> {
     if (req.cookies.userInfo===undefined) {
-        db.User.findOne(req.body).exec((err,user)=> {
+        console.log(req.body);
+        console.log(req.body.email.trim());
+        db.User.findOne({'email': req.body.email.trim()}).exec((err,user)=> {
             if (err) { 
                 res.status(INTERNAL_ERR).json({'status': INTERNAL_ERR});
             } else {
+                console.log('user',user);
                 if (user=={}) {
                     res.status(NOT_FOUND_ERR).json({'status': NOT_FOUND_ERR});
                 } else {
-                    console.log('setting cookie');
-                    res.cookie('userInfo',user,{expire: new Date(3600*1000*24 + Date.now()), httpOnly: true});
-                    res.status(OK).json({'status': OK,'description': 'OK'});
+                    bcrypt.compare(req.body.password.trim(), user.password, function(err, isMatch) {
+                        if (err) {
+                            res.status(NOT_FOUND_ERR).json({'status': NOT_FOUND_ERR});
+                        } else {
+                            console.log('setting cookie');
+                            res.cookie('userInfo',user,{expire: new Date(3600*1000*24 + Date.now()), httpOnly: true});
+                            res.status(OK).json({'status': OK,'description': 'OK'});
+                        }
+                    });
+                    
                 }
             }
         });

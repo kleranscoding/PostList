@@ -1,4 +1,6 @@
 const db = require('./models');
+const bcrypt= require('bcrypt');
+const SALT_WORK_FACTOR= 10;
 
 const categories_list= [
   {'name': 'community', 'description': 'displays listings for community activities'},
@@ -197,31 +199,37 @@ db.Category.deleteMany({}, (err,categories)=> {
 db.User.deleteMany({}, (err,users)=> {
   if (err) { return console.log(err); }
   users_list.forEach((user)=> {
-    var newUser= new db.User({
-      'username': user.username,
-      'email': user.email,
-      'password': user.password,
-      'location': user.location,
-      'join_date': user.join_date,
-      'img_url': user.img_url,
-      'preference': [],
-    });
-    newUser.save((err,savedUser)=> {
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
       if (err) { return console.log(err); }
-      console.log('saved user',savedUser.username);
-    });
-    user.preference.forEach((pref)=> {
-      db.Category.findOne({'name': pref},(err1,foundCat)=> {
-        if (err1) { return console.log(err1); }
-        db.User.updateOne(
-          {'_id': newUser._id},
-          {'$push': {'preference': foundCat}},
-          (err,pushedCat)=> {
-            if (err) { return console.log(err); }
-            console.log('saved preference',foundCat.name);
+      bcrypt.hash(user.password, salt, function(err, hash) {
+        if (err) { return console.log(err); }
+        var newUser= new db.User({
+          'username': user.username,
+          'email': user.email,
+          'password': hash,
+          'location': user.location,
+          'join_date': user.join_date,
+          'img_url': user.img_url,
+          'preference': [],
         });
-      });
-    });
+        newUser.save((err,savedUser)=> {
+          if (err) { return console.log(err); }
+          console.log('saved user',savedUser.username);
+        });
+        user.preference.forEach((pref)=> {
+          db.Category.findOne({'name': pref},(err1,foundCat)=> {
+            if (err1) { return console.log(err1); }
+            db.User.updateOne(
+              {'_id': newUser._id},
+              {'$push': {'preference': foundCat}},
+              (err,pushedCat)=> {
+                if (err) { return console.log(err); }
+                console.log('saved preference',foundCat.name);
+            });
+          });
+        });
+      })
+    })
   });
 
   db.Post.deleteMany({}, (err,posts)=> {

@@ -1,5 +1,6 @@
 
 var $categories;
+var $emailChecked= false, $passwordChecked= false;
 
 function checkEmptyVal(target) { return target.val()==''; }
 
@@ -30,7 +31,11 @@ $(document).ready(function(){
             'data': {'email': $('#email').val() },
             'success': function(json){
                 console.log(json);
-                if (json.length>0) alert('email is taken');
+                if (json.length>0) {
+                    alert('email is taken');
+                } else {
+                    $emailChecked= true;
+                }
             },
             'error': function(e1,e2,e3) { console.log(e1,e2,e3); }
         });
@@ -41,15 +46,19 @@ $(document).ready(function(){
         var $confirm_pwd= $('#confirm_password').val();
         if ($password!='' && $confirm_pwd!='' && $confirm_pwd!=$password) {
             alert('password not match');
+        } else if ($password!='' && $confirm_pwd!='' && $confirm_pwd==$password) {
+            console.log('password matched');
+            $passwordChecked= true;
         }
+
     });
 
     $('#cancel').on('click',function(){ $(location).attr('href','/login'); });
 
     $('#create').on('click', function(){
         if (checkEmptyVal($('#username'))) return;
-        if (checkEmptyVal($('#email'))) return;
-        if (checkEmptyVal($('#password'))) return;
+        if (!$emailChecked || checkEmptyVal($('#email'))) return;
+        if (!$passwordChecked || checkEmptyVal($('#password'))) return;
         if (checkEmptyVal($('#confirm_pwd'))) return;
         if (checkEmptyVal($('#loc'))) return;
         var $checked= $('div input[type=checkbox]:checked');
@@ -59,8 +68,8 @@ $(document).ready(function(){
 
         var dataObj= {};
         dataObj['username']= $('#username').val();
-        dataObj['email']= $('#email').val();
-        dataObj['password']= $('#password').val();
+        dataObj['email']= $('#email').val().trim();
+        dataObj['password']= $('#password').val().trim();
         dataObj['location']= $('#loc').val();
         dataObj['img_url']= $('#img_url').val(); 
         dataObj['preference']= $selectedCat;
@@ -81,10 +90,10 @@ $(document).ready(function(){
                 console.log(data);
                 if (data.status==200) {
                     $(location).attr('href','/profile');
+                } else {
+                    $(location).attr('href','/register');
                 }
-                //if (data.length==0) return;
                 
-                //$(location).attr('href','');
             },
             'error': function(err1,err2,err3) { console.log(err1,err2,err3); }
         });
