@@ -420,6 +420,7 @@ $(document).ready(function(){
             'data': JSON.stringify(dataObj),
             'contentType': 'application/json',
             'success': function(post){ 
+                location.reload(); return;
                 //console.log(post); 
                 closeEditPost();
                 clearViewModal();
