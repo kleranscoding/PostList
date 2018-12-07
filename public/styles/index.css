@@ -8,3 +8,15 @@
     overflow-x: hidden;
 }
 
+.jumbotron {
+    position: relative;
+}
+
+.jumbotron h2 {
+    display: block;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+

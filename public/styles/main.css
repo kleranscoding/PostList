@@ -31,31 +31,34 @@ nav .navbar-brand:hover {
     font-size: 25px;
 }
 
-nav li {
+nav li a {
     width: 150px;
+    font-size: 18px;
     transition: all 0.5s ease-in-out;
+    color: #2f595f!important;
 }
 
-nav li:hover {
-    width: 150px;
+nav li a:hover {
     font-size: 20px;
-    background: #64e1f1e3;
+    background: rgb(83, 156, 158)!important;
 }
 
-nav li:nth-child(1) {
-    background: rgb(242, 250, 130);
+nav li:nth-child(1) a{
+    background: rgb(242, 250, 130)!important;
 }
 
-nav li:nth-child(2) {
-    background: rgb(170, 255, 202);
+nav li:nth-child(2) a{
+    background: rgb(170, 255, 202)!important;
 }
 
-nav li:nth-child(3) {
-    background: rgb(255, 118, 182);
+nav li:nth-child(3) a{
+    background: rgb(255, 118, 182)!important;
+    font-size: 15px;
 }
 
-nav li:nth-child(4) {
-    background: rgb(255, 137, 90);
+nav li:nth-child(4) a{
+    background: rgb(255, 137, 90)!important;
+    font-size: 15px;
 }
 
 div [name=image-container] {

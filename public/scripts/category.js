@@ -98,7 +98,7 @@ $(document).ready(function(){
     
     //clearDisplayList();
     getCategories();
-    $('#search_form button').on('click',searchPostsByCategory);
+    $('#category_form button').on('click',searchPostsByCategory);
     
     /*
     $('#cat_options select').on('change',function(){

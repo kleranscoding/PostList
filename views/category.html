@@ -15,7 +15,6 @@
 
   <body>
       <header>
-          <div class='banner-pic'></div>
           <nav class='navbar navbar-expand-lg navbar-light bg-light'>
             <a class='navbar-brand' href='/'>#PostList</a>
             <ul class='nav navbar-nav'>
@@ -31,29 +30,33 @@
       <div class='row'>
         
         <div class='col-md-4'>
-          <label for='text_option'>
-            <h4>Search post</h4>
-          </label>
-          <div class='row'>
-              <div class='col-md-2'></div>
-            <div class='col-md-8'>
-              <input class='form-control' type='text' id='text_option'>
-            </div>   
-            <div class='col-md-2'>
-              <button type='button' name='search_text_button' class='btn btn-success'>Search!</button> 
-            </div>    
-          </div>
+          <form id='text_form'>
+            <label for='text_option'>
+              <h4>Search post</h4>
+            </label>  
+            <input class='form-control' type='text' id='text_option'>
+            <button type='button' name='search_text_button' class='btn btn-success'>Search!</button>
+          </form>
         </div>  
-<!-- 
+
         <div class='col-md-4'>
-          <form id='search_form'>
+          <form id='category_form'>
             <label for='cat_options'>
               <h4>Choose a Category</h4>
             </label>
             <select id='cat_options' class='form-control'></select>
-            <button type='button' class='btn btn-success'>GO!</button>
+            <button type='button' name='cat_search_button' class='btn btn-success'>GO!</button>
           </form>
-        </div> -->
+        </div> 
+
+      <div class='col-md-4'>
+          <form id='location_form'>
+            <label for='loc_options'>
+              <h4>Choose a Location (alpha)</h4>
+            </label>
+            <select id='loc_options' class='form-control' disabled></select>
+            <button type='button' class='btn btn-warning'>Coming Soon!</button>
+          </form>
       </div>
     
       <div id='show_posts'></div>

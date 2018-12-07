@@ -65,6 +65,10 @@ p[name=descrp-container] {
     overflow-y: scroll;
 }
 
+.update_prof_img_form {
+    display: none;
+}
+
 #modal-post-edit textarea {
     width: 80%;
     margin: 10px;
